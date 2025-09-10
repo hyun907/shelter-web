@@ -1,5 +1,5 @@
 import styles from "./App.module.css";
-import Map from "./components/Map";
+import { Map } from "@/features/map";
 
 function App() {
   return (
