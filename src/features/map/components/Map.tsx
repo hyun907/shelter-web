@@ -1,5 +1,7 @@
 import { GoogleMap, Circle, useLoadScript } from "@react-google-maps/api";
 import { useCurrentPosition } from "../hooks/useCurrentPosition";
+import { useTodayWeather } from "../hooks/useTodayWeather";
+import { WeatherOverlay } from "./WeatherOverlay";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -8,6 +10,7 @@ export default function Map() {
   const { isLoaded } = useLoadScript({ googleMapsApiKey: apiKey ?? "" });
 
   const { position, accuracy } = useCurrentPosition();
+  const { data: weather, loading, error } = useTodayWeather(position);
 
   if (!apiKey || !isLoaded) return null;
 
@@ -18,6 +21,8 @@ export default function Map() {
       zoom={position ? 15 : 12}
       options={{ fullscreenControl: false, streetViewControl: false, mapTypeControl: false }}
     >
+      {position && <WeatherOverlay weather={weather} loading={loading} error={error} />}
+
       {position && accuracy != null && (
         <Circle
           center={position}
