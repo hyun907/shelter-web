@@ -1,0 +1,45 @@
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.leftIcon {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  width: 90vw;
+  height: 48px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #bec1d1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  padding: 0 60px;
+}
+
+.input::placeholder {
+  color: #bec1d1;
+}
+
+.hasIcon {
+  padding-left: 40px;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bec1d1;
+}
