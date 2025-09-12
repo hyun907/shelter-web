@@ -2,9 +2,8 @@ import { useNearbyShelters } from "../hooks/useNearbyShelters";
 import { ShelterBottomSheetContent } from "./ShelterBottomSheetContent";
 
 export function ShelterBottomSheet({ position }: { position: google.maps.LatLngLiteral }) {
-  const { data: shelters, loading, error } = useNearbyShelters(position);
+  const { data: shelters, error } = useNearbyShelters(position);
 
-  if (loading) return <ShelterBottomSheetContent loading />;
   if (error) return <ShelterBottomSheetContent error={error} />;
 
   const items = Array.isArray(shelters)

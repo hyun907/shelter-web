@@ -4,7 +4,8 @@ import { useTodayWeather } from "../hooks/useTodayWeather";
 import { WeatherOverlay } from ".";
 import { useEffect, useRef } from "react";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
-import { ShelterBottomSheet } from "@/features/shelter";
+import { ShelterBottomSheetContent } from "@/features/shelter";
+import { useNearbyShelters } from "@/features/shelter";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -15,14 +16,34 @@ export default function Map() {
   const { position, accuracy } = useCurrentPosition();
   const { data: weather, loading, error } = useTodayWeather(position);
 
+  const { data: shelters, error: sheltersError } = useNearbyShelters(position);
+
   const { open } = useBottomSheetStore();
-  const openedRef = useRef(false);
+  const openedOnceRef = useRef(false);
 
   useEffect(() => {
-    if (!isLoaded || !position || openedRef.current) return;
-    open(<ShelterBottomSheet position={position} />, { ariaLabel: "대피소 목록" });
-    openedRef.current = true;
-  }, [isLoaded, position, open]);
+    if (!isLoaded || !position) return;
+
+    if (sheltersError) {
+      open(<ShelterBottomSheetContent error={sheltersError} />, { ariaLabel: "대피소 목록" });
+      openedOnceRef.current = true;
+      return;
+    }
+
+    if (Array.isArray(shelters)) {
+      const items = shelters.map((s, idx) => ({
+        id: String(s.REARE_FCLT_NO || idx),
+        name: s.REARE_NM,
+        address: s.RONA_DADDR || s.DADDR,
+        distanceMeter: s.distance
+      }));
+      open(<ShelterBottomSheetContent items={items} />, { ariaLabel: "대피소 목록" });
+      openedOnceRef.current = true;
+    } else if (!openedOnceRef.current) {
+      open(<ShelterBottomSheetContent items={[]} />, { ariaLabel: "대피소 목록" });
+      openedOnceRef.current = true;
+    }
+  }, [isLoaded, position, shelters, sheltersError, open]);
 
   if (!apiKey || !isLoaded) return null;
 

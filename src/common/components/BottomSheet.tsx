@@ -1,10 +1,15 @@
 import { createPortal } from "react-dom";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { useEffect } from "react";
-import styles from "./bottom-sheet.module.css";
+import { useBottomSheetInteraction } from "@/common/hooks/useBottomSheetInteraction";
+import { BottomSheetView } from "@/common/components/BottomSheetView";
+
+const PEEK_HEIGHT = 56;
 
 export function BottomSheet() {
   const { isOpen, content, close, options } = useBottomSheetStore();
+
+  const interaction = useBottomSheetInteraction(PEEK_HEIGHT);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -17,26 +22,26 @@ export function BottomSheet() {
 
   if (!isOpen) return null;
 
-  const handleBackdropClick = () => {
-    if (options?.onBackdropClick) options.onBackdropClick();
-    else close();
-  };
-
   const root = document.getElementById("modal-root") ?? document.body;
 
   return createPortal(
-    <div className={styles.backdrop} onClick={handleBackdropClick}>
-      <div
-        className={styles.sheetWrapper}
-        onClick={e => e.stopPropagation()}
-        aria-label={options?.ariaLabel}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className={styles.handle} />
-        <div className={styles.content}>{content}</div>
-      </div>
-    </div>,
+    <BottomSheetView
+      translateY={interaction.translateY}
+      isDragging={interaction.isDragging}
+      measured={interaction.measured}
+      sheetRef={interaction.sheetRef}
+      handleRef={interaction.handleRef}
+      onPointerDown={interaction.onPointerDown}
+      onPointerMove={interaction.onPointerMove}
+      onPointerUp={interaction.onPointerUp}
+      onTouchStart={interaction.onTouchStart}
+      onTouchMove={interaction.onTouchMove}
+      onTouchEnd={interaction.onTouchEnd}
+      onBackdropClick={() => (options?.onBackdropClick ? options.onBackdropClick() : close())}
+      ariaLabel={options?.ariaLabel}
+    >
+      {content}
+    </BottomSheetView>,
     root
   );
 }
