@@ -1,0 +1,42 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  padding: 16px 8px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.title {
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.2;
+  color: #006cff;
+}
+
+.address {
+  margin-top: 6px;
+  color: #aaaaaa;
+  font-size: 14px;
+}
+
+.meta {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.distance {
+  color: #000000;
+  font-weight: 600;
+}
+
+.separator {
+  color: #999999;
+}
+
+.phone {
+  color: #000000;
+}
