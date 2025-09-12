@@ -5,8 +5,9 @@ export async function fetchTodayWeather(params: {
   userLat: number;
   userLot: number;
   baseUrl?: string;
+  signal?: AbortSignal;
 }) {
-  const { userLat, userLot, baseUrl } = params;
+  const { userLat, userLot, baseUrl, signal } = params;
 
   const urlStr = buildApiUrl(baseUrl, "/weather/today");
 
@@ -18,7 +19,8 @@ export async function fetchTodayWeather(params: {
     params: {
       userLat,
       userLot
-    }
+    },
+    signal
   });
 
   return res.data;

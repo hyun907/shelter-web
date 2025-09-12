@@ -21,7 +21,12 @@ export function useTodayWeather(
     setLoading(true);
     setError(null);
 
-    fetchTodayWeather({ userLat: position.lat, userLot: position.lng, baseUrl: options?.baseUrl })
+    fetchTodayWeather({
+      userLat: position.lat,
+      userLot: position.lng,
+      baseUrl: options?.baseUrl,
+      signal: controller.signal
+    })
       .then(json => {
         if (aborted) return;
         const parsed = toTodayWeatherResponse(json);
@@ -40,7 +45,7 @@ export function useTodayWeather(
       aborted = true;
       controller.abort();
     };
-  }, [position?.lat, position?.lng, options?.baseUrl]);
+  }, [position, options?.baseUrl]);
 
   return { data, loading, error } as const;
 }

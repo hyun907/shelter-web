@@ -2,9 +2,9 @@ import { memo } from "react";
 import type { TodayWeatherResponse } from "../schemas/weather.schema";
 import styles from "./WeatherOverlay.module.css";
 import { useModalStore } from "@/common/hooks/useModalStore";
-import { WeatherModalContent } from "./WeatherModalContent";
+import { WeatherModalContent } from ".";
+import { WeatherButton } from ".";
 import { useWeatherButtonLabel } from "../hooks/useWeatherButtonLabel";
-import { WeatherButton } from "./WeatherButton";
 
 type Props = {
   weather: TodayWeatherResponse | null;

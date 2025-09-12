@@ -1,7 +1,7 @@
 import { GoogleMap, Circle, useLoadScript } from "@react-google-maps/api";
 import { useCurrentPosition } from "../hooks/useCurrentPosition";
 import { useTodayWeather } from "../hooks/useTodayWeather";
-import { WeatherOverlay } from "./WeatherOverlay";
+import { WeatherOverlay } from ".";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
