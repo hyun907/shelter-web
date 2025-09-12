@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => {
         "/weather": {
           target: proxyTarget,
           changeOrigin: true
+        },
+        "/shelter": {
+          target: proxyTarget,
+          changeOrigin: true
         }
       }
     }
