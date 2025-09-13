@@ -19,7 +19,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/map" element={<Map />} />
             {/* <Modal />
-      <BottomSheet /> */}
+            <BottomSheet /> */}
           </Routes>
         </Router>
       </div>

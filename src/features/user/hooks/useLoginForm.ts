@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 const schema = z.object({
-  id: z.string().min(8, "아이디를 입력해주세요.").max(16, "아이디를 입력해주세요."),
+  id: z.string().min(3, "아이디를 입력해주세요.").max(16, "아이디를 입력해주세요."),
   password: z.string().min(8, "비밀번호를 입력해주세요.").max(16, "비밀번호를 입력해주세요.")
 });
 
