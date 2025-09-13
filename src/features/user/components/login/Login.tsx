@@ -15,7 +15,7 @@ export default function Login() {
   };
 
   const handleGuest = () => {
-    // 로그인 없이 둘러보기 처리
+    navigate("/map");
   };
 
   return (
@@ -26,12 +26,12 @@ export default function Login() {
       </div>
 
       <div className={styles.inputArea}>
-        <Input Icon={FaUser} placeholder="아이디" {...register("id")} />
+        <Input Icon={FaUser} placeholder="아이디" {...register("memberId")} />
         <Input
           Icon={FaLock}
           placeholder="비밀번호"
           type="password"
-          {...register("password")}
+          {...register("memberPassword")}
           secureTextEntry
         />
         {mutation.isError && (
@@ -40,10 +40,7 @@ export default function Login() {
       </div>
 
       <div className={styles.buttonArea}>
-        <Button
-          title={mutation.isPending ? "로그인 중..." : "로그인"}
-          onClick={handleSubmit(data => mutation.mutate(data))}
-        />
+        <Button title={"로그인"} onClick={handleSubmit(data => mutation.mutate(data))} />
         <Button title="회원가입" onClick={handleSignup} className={styles.grayButton} />
       </div>
 

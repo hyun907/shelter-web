@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSignUp } from "../auth";
-import type { SignUpRequest } from "../../schemas/auth.schema";
+import type { SignUpRequest, SignUpResponse } from "../../schemas/auth.schema";
 
-export function useSignUp(onSuccess?: (data: { message: string }) => void) {
+export function useSignUp(onSuccess?: (data: SignUpResponse) => void) {
   const queryClient = useQueryClient();
 
   return useMutation({

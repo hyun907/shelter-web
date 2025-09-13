@@ -6,9 +6,11 @@ export type SignUpRequest = {
   gender: string;
   birthday: string;
 };
+export type SignUpResponse = { message: string };
 
 //로그인
 export type LoginRequest = {
   memberId: string;
   memberPassword: string;
 };
+export type LoginResponse = { message: string };
