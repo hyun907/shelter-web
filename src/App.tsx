@@ -8,7 +8,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -18,13 +17,12 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/map" element={<Map />} />
-            {/* <Modal />
-            <BottomSheet /> */}
           </Routes>
+          <Modal />
+          <BottomSheet />
         </Router>
       </div>
     </QueryClientProvider>
   );
 }
-
 export default App;
