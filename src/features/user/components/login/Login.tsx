@@ -5,8 +5,11 @@ import styles from "./Login.module.css";
 import LogoIcon from "@/assets/icon/cb_point.svg";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useLoginForm } from "../../hooks/useLoginForm";
+import { useAutoLogin } from "../../hooks/useAutoLogin";
 
 export default function Login() {
+  useAutoLogin();
+
   const navigate = useNavigate();
   const { register, handleSubmit, mutation } = useLoginForm();
 
