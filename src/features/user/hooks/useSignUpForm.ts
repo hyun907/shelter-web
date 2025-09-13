@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
+import { useSignUp } from "@/shared/services/mutations/useSignUp";
 
 const schema = z.object({
   id: z.string().min(8, "사용할 수 없는 아이디입니다.").max(16, "사용할 수 없는 아이디입니다."),
@@ -17,9 +17,6 @@ const schema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD 형식으로 입력해주세요."),
   gender: z.enum(["male", "female"], { message: "성별을 선택해주세요." })
 });
-
-const signupApi = async (data: any) =>
-  new Promise(resolve => setTimeout(() => resolve(data), 1000));
 
 export function useSignUpForm() {
   const {
@@ -42,9 +39,8 @@ export function useSignUpForm() {
     }
   });
 
-  const mutation = useMutation({
-    mutationFn: signupApi,
-    onSuccess: () => reset()
+  const mutation = useSignUp((data: unknown) => {
+    console.log("폼 훅 내부에서 회원가입 성공 처리", data);
   });
 
   const birthValue = watch("birth");
