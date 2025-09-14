@@ -15,23 +15,23 @@
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 1.6rem;
+  font-weight: 500;
   line-height: 1.1;
   user-select: none;
   -webkit-backdrop-filter: saturate(180%) blur(6px);
   backdrop-filter: saturate(180%) blur(6px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
 }
 
 .buttonSummer {
-  color: #f62121;
   border: 2px solid #f29292;
 }
 
 .buttonWinter {
-  color: #2173f6;
   border: 2px solid #92bdf2;
 }
 
@@ -42,6 +42,44 @@
 .button:disabled {
   cursor: default;
   opacity: 0.7;
+}
+
+.weatherInfo {
+  display: flex;
+  align-items: center;
+}
+
+.shelterButton {
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.shelterButtonSummer {
+  background-color: #fef2f2;
+  color: #f62121;
+}
+
+.shelterButtonWinter {
+  background-color: #eff6ff;
+  color: #2173f6;
+}
+
+.shelterButtonSummer:not(:disabled):active {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%), #fef2f2;
+  background-blend-mode: multiply, normal;
+}
+
+.shelterButtonWinter:not(:disabled):active {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%), #eff6ff;
+  background-blend-mode: multiply, normal;
 }
 
 .backdrop {
@@ -170,4 +208,36 @@
   color: #111827;
   font-weight: 800;
   font-size: clamp(15px, 2.2vw, 18px);
+}
+
+/* Mobile responsive styles */
+@media (max-width: 480px) {
+  .button {
+    min-width: 260px;
+    padding: 8px 12px;
+    font-size: 1.4rem;
+  }
+
+  .shelterButton {
+    padding: 6px 10px;
+    font-size: 1.1rem;
+  }
+
+  .container {
+    left: 8px;
+    top: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .button {
+    min-width: 240px;
+    padding: 6px 10px;
+    font-size: 1.2rem;
+  }
+
+  .shelterButton {
+    padding: 5px 8px;
+    font-size: 1rem;
+  }
 }

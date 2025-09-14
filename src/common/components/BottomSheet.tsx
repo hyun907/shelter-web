@@ -12,6 +12,26 @@ export function BottomSheet() {
   const interaction = useBottomSheetInteraction(PEEK_HEIGHT);
 
   useEffect(() => {
+    if (isOpen) {
+      useBottomSheetStore.setState({
+        expandToTop: interaction.expandToTop,
+        collapseToBottom: interaction.collapseToBottom
+      });
+    } else {
+      useBottomSheetStore.setState({
+        expandToTop: null,
+        collapseToBottom: null
+      });
+    }
+  }, [isOpen, interaction.expandToTop, interaction.collapseToBottom]);
+
+  useEffect(() => {
+    if (isOpen) {
+      useBottomSheetStore.setState({ translateY: interaction.translateY });
+    }
+  }, [isOpen, interaction.translateY]);
+
+  useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
@@ -28,6 +48,7 @@ export function BottomSheet() {
     <BottomSheetView
       translateY={interaction.translateY}
       isDragging={interaction.isDragging}
+      isAnimating={interaction.isAnimating}
       measured={interaction.measured}
       sheetRef={interaction.sheetRef}
       handleRef={interaction.handleRef}
