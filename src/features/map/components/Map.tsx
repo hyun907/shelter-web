@@ -22,7 +22,13 @@ export default function Map() {
   const openedOnceRef = useRef(false);
 
   useEffect(() => {
-    if (!isLoaded || !position) return;
+    if (!isLoaded) return;
+
+    if (!position && !openedOnceRef.current) {
+      open(<ShelterBottomSheetContent items={[]} />, { ariaLabel: "대피소 목록" });
+      openedOnceRef.current = true;
+      return;
+    }
 
     if (sheltersError) {
       open(<ShelterBottomSheetContent error={sheltersError} />, { ariaLabel: "대피소 목록" });
@@ -31,16 +37,8 @@ export default function Map() {
     }
 
     if (Array.isArray(shelters)) {
-      const items = shelters.map((s, idx) => ({
-        id: String(s.REARE_FCLT_NO || idx),
-        name: s.REARE_NM,
-        address: s.RONA_DADDR || s.DADDR,
-        distanceMeter: s.distance
-      }));
+      const items = Array.isArray(shelters) ? shelters : [];
       open(<ShelterBottomSheetContent items={items} />, { ariaLabel: "대피소 목록" });
-      openedOnceRef.current = true;
-    } else if (!openedOnceRef.current) {
-      open(<ShelterBottomSheetContent items={[]} />, { ariaLabel: "대피소 목록" });
       openedOnceRef.current = true;
     }
   }, [isLoaded, position, shelters, sheltersError, open]);

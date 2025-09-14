@@ -6,14 +6,6 @@ export function ShelterBottomSheet({ position }: { position: google.maps.LatLngL
 
   if (error) return <ShelterBottomSheetContent error={error} />;
 
-  const items = Array.isArray(shelters)
-    ? shelters.map((s, idx) => ({
-        id: String(s.REARE_FCLT_NO || idx),
-        name: s.REARE_NM,
-        address: s.RONA_DADDR || s.DADDR,
-        distanceMeter: s.distance
-      }))
-    : [];
-
+  const items = Array.isArray(shelters) ? shelters : [];
   return <ShelterBottomSheetContent items={items} />;
 }

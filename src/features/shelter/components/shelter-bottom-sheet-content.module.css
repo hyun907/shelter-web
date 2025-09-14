@@ -4,8 +4,10 @@
 }
 
 .card {
+  all: unset;
   padding: 16px 8px;
   border-bottom: 1px solid #eeeeee;
+  cursor: pointer;
 }
 
 .title {
