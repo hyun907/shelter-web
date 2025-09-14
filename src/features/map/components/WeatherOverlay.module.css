@@ -10,12 +10,11 @@
 }
 
 .button {
-  background: rgba(17, 24, 39, 0.8);
-  color: #fff;
-  border: 1px solid #374151;
+  background-color: #fff;
+  color: #000000;
   padding: 10px 14px;
-  border-radius: 999px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 1.6rem;
   line-height: 1.1;
   user-select: none;
   -webkit-backdrop-filter: saturate(180%) blur(6px);
@@ -24,6 +23,16 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+}
+
+.buttonSummer {
+  color: #f62121;
+  border: 2px solid #f29292;
+}
+
+.buttonWinter {
+  color: #2173f6;
+  border: 2px solid #92bdf2;
 }
 
 .button:not(:disabled) {
