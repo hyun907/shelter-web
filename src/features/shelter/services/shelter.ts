@@ -1,5 +1,6 @@
 import axios from "axios";
 import { buildApiUrl } from "@/common/utils/url";
+import { getCurrentSeason } from "@/features/map/utils/weather";
 import type { NearbyShelterApiResponse } from "../schemas/shelter.schema";
 
 export async function fetchNearbyShelters(params: {
@@ -10,7 +11,9 @@ export async function fetchNearbyShelters(params: {
 }): Promise<NearbyShelterApiResponse> {
   const { userLat, userLot, baseUrl, signal } = params;
 
-  const urlStr = buildApiUrl(baseUrl, "/shelter/winter/near");
+  const season = getCurrentSeason();
+  const endpoint = season === "summer" ? "/shelter/summer/near" : "/shelter/winter/near";
+  const urlStr = buildApiUrl(baseUrl, endpoint);
 
   const res = await axios.get(urlStr, {
     headers: {

@@ -3,6 +3,7 @@ import styles from "./bottom-sheet.module.css";
 export type BottomSheetViewProps = {
   translateY: number;
   isDragging: boolean;
+  isAnimating: boolean;
   measured: boolean;
   sheetRef: React.RefObject<HTMLDivElement>;
   handleRef: React.RefObject<HTMLDivElement>;
@@ -21,6 +22,7 @@ export function BottomSheetView(props: BottomSheetViewProps) {
   const {
     translateY,
     isDragging,
+    isAnimating,
     measured,
     sheetRef,
     handleRef,

@@ -25,7 +25,12 @@ function WeatherOverlayComponent({ weather, loading, error }: Props) {
 
   return (
     <div className={styles.container}>
-      <WeatherButton label={buttonText} disabled={loading || !!error} onClick={handleOpen} />
+      <WeatherButton
+        label={buttonText}
+        weather={weather}
+        disabled={loading || !!error}
+        onClick={handleOpen}
+      />
     </div>
   );
 }

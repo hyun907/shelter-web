@@ -21,8 +21,15 @@ export default function ShelterDetail() {
 
   const onClick = () => console.log("경로보기");
 
+  const lat = typeof shelter.LA === "string" ? parseFloat(shelter.LA) : shelter.LA;
+  const lng = typeof shelter.LO === "string" ? parseFloat(shelter.LO) : shelter.LO;
+
+  if (isNaN(lat) || isNaN(lng)) {
+    return <div>유효하지 않은 좌표 정보입니다.</div>;
+  }
+
   // 보조 정보: 비고나 시설분류
-  const auxiliaryInfo = shelter.RMRK || shelter.FCLTY_SCLAS || "정보 없음";
+  const auxiliaryInfo = shelter.RM || shelter.FCLTY_SCLAS || "정보 없음";
 
   return (
     <div className={styles.container}>
@@ -31,7 +38,7 @@ export default function ShelterDetail() {
         <div className={styles.mapContainer}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "200px" }}
-            center={{ lat: shelter.LAT, lng: shelter.LOT }}
+            center={{ lat, lng }}
             zoom={15}
             options={{
               fullscreenControl: false,
@@ -39,42 +46,42 @@ export default function ShelterDetail() {
               mapTypeControl: false
             }}
           >
-            <Marker position={{ lat: shelter.LAT, lng: shelter.LOT }} />
+            <Marker position={{ lat, lng }} />
           </GoogleMap>
         </div>
 
         {/* 상세 정보 */}
         <div className={styles.detailSection}>
           <div>
-            <h1 className={styles.title}>{shelter.REARE_NM}</h1>
-            <p className={styles.address}>{shelter.RONA_DADDR || shelter.DADDR}</p>
+            <h1 className={styles.title}>{shelter.RSTR_NM}</h1>
+            <p className={styles.address}>{shelter.RN_DTL_ADRES || shelter.DTL_ADRES}</p>
           </div>
 
           {/* 수용 인원 */}
           <div className={styles.row}>
             <MdPeople style={{ color: "#0c47bcff", width: "24px", height: "24px" }} /> 최대{" "}
-            {shelter.UTZTN_PSBLTY_TNOP || "정보 없음"}명
+            {shelter.USE_PSBL_NMPR || "정보 없음"}명
           </div>
 
           {/* 운영 시간 */}
           <div className={styles.row}>
             <MdSchedule style={{ color: "#f0350bff", width: "24px", height: "24px" }} /> 평일 운영:{" "}
-            {shelter.WKDY_OPER_BGNG_HR && shelter.WKDY_OPER_END_HR
-              ? `${formatTime(shelter.WKDY_OPER_BGNG_HR)} ~ ${formatTime(shelter.WKDY_OPER_END_HR)}`
+            {shelter.WKDAY_OPER_BEGIN_TIME && shelter.WKDAY_OPER_END_TIME
+              ? `${formatTime(shelter.WKDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKDAY_OPER_END_TIME)}`
               : "정보 없음"}
           </div>
 
           <div className={styles.row}>
             <MdSchedule style={{ color: "#f5d32bff", width: "24px", height: "24px" }} /> 주말 운영:{" "}
-            {shelter.SNDY_OPER_BGNG_HR && shelter.SNDY_OPER_END_HR
-              ? `${formatTime(shelter.SNDY_OPER_BGNG_HR)} ~ ${formatTime(shelter.SNDY_OPER_END_HR)}`
+            {shelter.WKEND_HDAY_OPER_BEGIN_TIME && shelter.WKEND_HDAY_OPER_END_TIME
+              ? `${formatTime(shelter.WKEND_HDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKEND_HDAY_OPER_END_TIME)}`
               : "정보 없음"}
           </div>
 
           {/* 면적 */}
           <div className={styles.row}>
             <MdApartment style={{ color: "#4b7278ff", width: "24px", height: "24px" }} /> 면적:{" "}
-            {shelter.FCLTY_SCLAS || "정보 없음"}㎡
+            {shelter.AR || "정보 없음"}㎡
           </div>
 
           {/* 추가 정보 */}
@@ -86,13 +93,13 @@ export default function ShelterDetail() {
           {/* 대피소 번호 */}
           <div className={styles.row}>
             <MdInfo style={{ color: "#6a0dadff", width: "24px", height: "24px" }} /> 시설 고유 번호:{" "}
-            {shelter.REARE_FCLT_NO}
+            {shelter.RSTR_FCLTY_NO}
           </div>
 
           {/* 마지막 수정 시간 */}
           <div className={styles.row}>
             <MdInfo style={{ color: "#228b22ff", width: "24px", height: "24px" }} />
-            마지막 업데이트: {formatDate(shelter.MDFCN_HR)}
+            마지막 업데이트: {formatDate(shelter.MODF_TIME)}
           </div>
         </div>
       </div>

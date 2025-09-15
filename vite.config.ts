@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
       alias: [{ find: "@", replacement: "/src" }]
     },
     server: {
+      host: true,
       proxy: {
         "/weather": {
           target: proxyTarget,
