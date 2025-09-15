@@ -1,10 +1,8 @@
 import { GoogleMap, Circle, useLoadScript } from "@react-google-maps/api";
 import { useCurrentPosition } from "../hooks/useCurrentPosition";
 import { useTodayWeather } from "../hooks/useTodayWeather";
+import { useMapBottomSheet } from "../hooks/useMapBottomSheet";
 import { WeatherOverlay } from ".";
-import { useEffect, useRef } from "react";
-import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
-import { ShelterBottomSheetContent } from "@/features/shelter";
 import { useNearbyShelters } from "@/features/shelter";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
@@ -18,30 +16,7 @@ export default function Map() {
 
   const { data: shelters, error: sheltersError } = useNearbyShelters(position);
 
-  const { open } = useBottomSheetStore();
-  const openedOnceRef = useRef(false);
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    if (!position && !openedOnceRef.current) {
-      open(<ShelterBottomSheetContent items={[]} />, { ariaLabel: "대피소 목록" });
-      openedOnceRef.current = true;
-      return;
-    }
-
-    if (sheltersError) {
-      open(<ShelterBottomSheetContent error={sheltersError} />, { ariaLabel: "대피소 목록" });
-      openedOnceRef.current = true;
-      return;
-    }
-
-    if (Array.isArray(shelters)) {
-      const items = Array.isArray(shelters) ? shelters : [];
-      open(<ShelterBottomSheetContent items={items} />, { ariaLabel: "대피소 목록" });
-      openedOnceRef.current = true;
-    }
-  }, [isLoaded, position, shelters, sheltersError, open]);
+  useMapBottomSheet(isLoaded, position, shelters, sheltersError);
 
   if (!apiKey || !isLoaded) return null;
 
