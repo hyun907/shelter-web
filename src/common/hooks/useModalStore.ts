@@ -12,6 +12,7 @@ interface ModalStore {
   options: ModalOptions | null;
   open: (content: ReactNode, options?: ModalOptions) => void;
   close: () => void;
+  clear: () => void;
 }
 
 export const useModalStore = create<ModalStore>(set => ({
@@ -19,5 +20,6 @@ export const useModalStore = create<ModalStore>(set => ({
   content: null,
   options: null,
   open: (content, options) => set({ isOpen: true, content, options: options ?? null }),
-  close: () => set({ isOpen: false, content: null, options: null })
+  close: () => set({ isOpen: false, content: null, options: null }),
+  clear: () => set({ isOpen: false, content: null, options: null })
 }));

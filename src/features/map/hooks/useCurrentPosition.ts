@@ -1,30 +1,20 @@
-import { useEffect, useState } from "react";
-import { toLatLng, toAccuracy } from "../schemas/geo.schema";
-import { getCurrentPositionOnce } from "../services/geolocation";
+import { useCurrentPositionQuery, getPositionError } from "./useCurrentPositionQuery";
+
+type PositionError = {
+  type: "permission_denied" | "position_unavailable" | "timeout" | "not_supported" | "unknown";
+  message: string;
+};
 
 export function useCurrentPosition() {
-  const [position, setPosition] = useState<google.maps.LatLngLiteral | null>(null);
-  const [accuracy, setAccuracy] = useState<number | null>(null);
+  const { data, error, isLoading, refetch } = useCurrentPositionQuery();
 
-  useEffect(() => {
-    let mounted = true;
+  const positionError = error ? getPositionError(error) : null;
 
-    getCurrentPositionOnce({ enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 })
-      .then(({ coords }) => {
-        if (!mounted) return;
-        const pos = toLatLng({ lat: coords.latitude, lng: coords.longitude });
-        const acc = toAccuracy(coords.accuracy);
-        setPosition(pos);
-        setAccuracy(acc);
-      })
-      .catch(() => {
-        // 권한 거부/오류 처리
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  return { position, accuracy };
+  return {
+    position: data?.position || null,
+    accuracy: data?.accuracy || null,
+    error: positionError,
+    isLoading,
+    retry: refetch
+  };
 }
