@@ -1,19 +1,3 @@
-export function toEmojiByCode(sky: string, pty?: string) {
-  if (pty && pty !== "0") return "🌧️";
-  switch (sky) {
-    case "1":
-      return "☀️";
-    case "2":
-      return "🌤️";
-    case "3":
-      return "🌥️";
-    case "4":
-      return "☁️";
-    default:
-      return "☀️";
-  }
-}
-
 export function normalizeTemp(tmp: string | number | undefined) {
   if (tmp == null) return "-";
   const str = String(tmp).trim();
@@ -35,6 +19,27 @@ export function toSkyKorean(code: string, pty: string | undefined) {
       return "흐림";
     default:
       return code;
+  }
+}
+
+export function toPtyKorean(pty: string) {
+  switch (pty) {
+    case "0":
+      return "없음";
+    case "1":
+      return "비";
+    case "2":
+      return "비/눈";
+    case "3":
+      return "눈";
+    case "5":
+      return "비";
+    case "6":
+      return "비/눈";
+    case "7":
+      return "눈";
+    default:
+      return pty;
   }
 }
 

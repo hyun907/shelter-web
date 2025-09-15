@@ -1,14 +1,17 @@
 import styles from "./WeatherOverlay.module.css";
 import { getCurrentSeason } from "../utils/weather";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
+import { WeatherIcon } from "./WeatherIcon";
+import type { TodayWeatherResponse } from "../schemas/weather.schema";
 
 export type WeatherButtonProps = {
   label: string;
+  weather?: TodayWeatherResponse | null;
   disabled?: boolean;
   onClick?: () => void;
 };
 
-export function WeatherButton({ label, disabled, onClick }: WeatherButtonProps) {
+export function WeatherButton({ label, weather, disabled, onClick }: WeatherButtonProps) {
   const season = getCurrentSeason();
   const seasonClass = season === "summer" ? styles.buttonSummer : styles.buttonWinter;
   const isOpen = useBottomSheetStore(state => state.isOpen);
@@ -35,6 +38,9 @@ export function WeatherButton({ label, disabled, onClick }: WeatherButtonProps) 
         onClick={onClick}
         style={{ cursor: disabled ? "default" : "pointer" }}
       >
+        {weather && (
+          <WeatherIcon sky={weather.sky} pty={weather.pty} style={{ marginRight: "8px" }} />
+        )}
         {label}
       </span>
       <button

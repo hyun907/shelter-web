@@ -1,6 +1,6 @@
 import type { TodayWeatherResponse } from "../schemas/weather.schema";
 import styles from "./WeatherOverlay.module.css";
-import { normalizeTemp, toSkyKorean } from "../utils/weather";
+import { normalizeTemp, toSkyKorean, toPtyKorean } from "../utils/weather";
 
 export function WeatherModalContent({
   weather,
@@ -34,7 +34,7 @@ export function WeatherModalContent({
               </div>
               <div className={styles.row}>
                 <div className={styles.label}>강수형태</div>
-                <div className={styles.value}>{weather.pty === "0" ? "없음" : weather.pty}</div>
+                <div className={styles.value}>{toPtyKorean(weather.pty)}</div>
               </div>
               <div className={styles.row}>
                 <div className={styles.label}>1시간 강수량</div>
