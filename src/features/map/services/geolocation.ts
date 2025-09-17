@@ -4,8 +4,8 @@ export function getCurrentPositionOnce(options?: Options) {
   return new Promise<GeolocationPosition>((resolve, reject) => {
     if (!navigator.geolocation) {
       const error = new GeolocationPositionError();
-      error.code = 0; // UNKNOWN_ERROR
-      error.message = "Geolocation not supported";
+      Object.defineProperty(error, "code", { value: 0 }); // UNKNOWN_ERROR
+      Object.defineProperty(error, "message", { value: "Geolocation not supported" });
       reject(error);
       return;
     }

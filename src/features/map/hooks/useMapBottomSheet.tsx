@@ -1,10 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { ShelterBottomSheetContent } from "@/features/shelter";
-import type {
-  NearbyShelterApiItem,
-  NearbyShelterApiResponse
-} from "@/features/shelter/schemas/shelter.schema";
+import type { NearbyShelterApiItem } from "@/features/shelter/schemas/shelter.schema";
 
 /**
  * 지도에서 바텀시트를 관리하는 로직을 제공하는 훅

@@ -1,10 +1,5 @@
 import { useCurrentPositionQuery, getPositionError } from "./useCurrentPositionQuery";
 
-type PositionError = {
-  type: "permission_denied" | "position_unavailable" | "timeout" | "not_supported" | "unknown";
-  message: string;
-};
-
 export function useCurrentPosition() {
   const { data, error, isLoading, refetch } = useCurrentPositionQuery();
 

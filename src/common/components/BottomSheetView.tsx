@@ -22,7 +22,6 @@ export function BottomSheetView(props: BottomSheetViewProps) {
   const {
     translateY,
     isDragging,
-    isAnimating,
     measured,
     sheetRef,
     handleRef,
