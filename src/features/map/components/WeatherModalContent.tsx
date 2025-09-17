@@ -5,11 +5,13 @@ import { normalizeTemp, toSkyKorean, toPtyKorean } from "../utils/weather";
 export function WeatherModalContent({
   weather,
   loading,
-  error
+  error,
+  rawResponse
 }: {
   weather: TodayWeatherResponse | null;
   loading?: boolean;
   error?: string | null;
+  rawResponse?: unknown;
 }) {
   return (
     <>
@@ -18,7 +20,33 @@ export function WeatherModalContent({
       </div>
       <div className={styles.contentScroll}>
         {loading && <div>불러오는 중...</div>}
-        {error && !loading && <div style={{ color: "#ef4444" }}>오류: {error}</div>}
+        {error && !loading && (
+          <div style={{ color: "#ef4444" }}>
+            <div>오류: {error}</div>
+            {error.startsWith("데이터 파싱 오류") && (
+              <div style={{ fontSize: "12px", marginTop: "8px", opacity: 0.8 }}>
+                서버에서 받은 데이터 형식이 예상과 다릅니다. 잠시 후 다시 시도해주세요.
+              </div>
+            )}
+            {import.meta.env.DEV && (
+              <details style={{ marginTop: "8px", fontSize: "10px" }}>
+                <summary>개발자 정보 (개발 환경에서만 표시)</summary>
+                <pre
+                  style={{
+                    background: "#f5f5f5",
+                    padding: "8px",
+                    marginTop: "4px",
+                    fontSize: "10px",
+                    overflow: "auto",
+                    maxHeight: "200px"
+                  }}
+                >
+                  {error}
+                </pre>
+              </details>
+            )}
+          </div>
+        )}
         {!loading && !error && weather && (
           <>
             <div className={styles.hero}>

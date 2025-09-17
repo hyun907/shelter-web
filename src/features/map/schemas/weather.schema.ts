@@ -18,7 +18,10 @@ export type TodayWeatherResponse = {
 };
 
 export function isTodayWeatherResponse(input: unknown): input is TodayWeatherResponse {
-  if (typeof input !== "object" || input === null) return false;
+  if (typeof input !== "object" || input === null) {
+    console.log("날씨 스키마 검증 실패: input이 객체가 아님", typeof input, input);
+    return false;
+  }
   const obj = input as Record<string, unknown>;
   const requiredStringFields = [
     "baseDate",
@@ -37,9 +40,19 @@ export function isTodayWeatherResponse(input: unknown): input is TodayWeatherRes
     "pcp"
   ];
   for (const key of requiredStringFields) {
-    if (typeof obj[key] !== "string") return false;
+    if (typeof obj[key] !== "string") {
+      console.log(`날씨 스키마 검증 실패: ${key} 필드가 문자열이 아님`, typeof obj[key], obj[key]);
+      return false;
+    }
   }
-  if (typeof obj["nx"] !== "number" || typeof obj["ny"] !== "number") return false;
+  if (typeof obj["nx"] !== "number" || typeof obj["ny"] !== "number") {
+    console.log(
+      "날씨 스키마 검증 실패: nx 또는 ny가 숫자가 아님",
+      typeof obj["nx"],
+      typeof obj["ny"]
+    );
+    return false;
+  }
   return true;
 }
 
