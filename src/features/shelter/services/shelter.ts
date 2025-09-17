@@ -20,6 +20,9 @@ export async function fetchNearbyShelters(params: {
   if (import.meta.env.VITE_API_BASE_URL) {
     // 배포 환경: 환경 변수 사용
     apiBase = import.meta.env.VITE_API_BASE_URL;
+  } else if (import.meta.env.VITE_PROXY_TARGET) {
+    // Vercel에서 자동 설정된 프록시 타겟 사용
+    apiBase = import.meta.env.VITE_PROXY_TARGET;
   } else if (import.meta.env.DEV) {
     // 개발 환경: 프록시 사용 (상대 경로)
     apiBase = undefined; // 상대 경로로 프록시 사용
