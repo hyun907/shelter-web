@@ -13,7 +13,8 @@ export async function fetchNearbyShelters(params: {
 
   const season = getCurrentSeason();
   const endpoint = season === "summer" ? "/shelter/summer/near" : "/shelter/winter/near";
-  const urlStr = buildApiUrl(baseUrl, endpoint);
+  const apiBase = import.meta.env.VITE_API_BASE_URL || baseUrl;
+  const urlStr = buildApiUrl(apiBase, endpoint);
 
   const res = await axios.get(urlStr, {
     headers: {

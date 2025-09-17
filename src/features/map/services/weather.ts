@@ -9,7 +9,8 @@ export async function fetchTodayWeather(params: {
 }) {
   const { userLat, userLot, baseUrl, signal } = params;
 
-  const urlStr = buildApiUrl(baseUrl, "/weather/today");
+  const apiBase = import.meta.env.VITE_API_BASE_URL || baseUrl;
+  const urlStr = buildApiUrl(apiBase, "/weather/today");
 
   const res = await axios.get(urlStr, {
     headers: {
