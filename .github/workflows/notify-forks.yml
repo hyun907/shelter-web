@@ -5,7 +5,7 @@ on:
     types: [upstream-updated]
 
 permissions:
-  contents: write 
+  contents: write
 
 jobs:
   sync:
