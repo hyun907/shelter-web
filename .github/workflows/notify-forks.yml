@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: repository_dispatch to fork
         env:
-          GH_TOKEN: ${{ secrets.FORK_DISPATCH_TOKEN }} 
+          GH_TOKEN: ${{ secrets.FORK_DISPATCH_TOKEN }}  
           FORK_OWNER: hyun907
           FORK_REPO: shelter-web
         run: |
