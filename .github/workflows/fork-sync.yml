@@ -1,0 +1,70 @@
+name: 포크 자동 싱크
+
+on:
+  repository_dispatch:
+    types: [ upstream-updated ]   
+  workflow_dispatch:              # 수동 실행도 가능
+  push:
+    branches: [ main ]            
+
+permissions:
+  contents: write
+
+env:
+  DEFAULT_UPSTREAM: K-PaaS-Team22/shelter-web
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork == true }}
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Git 설정
+        run: |
+          git config --global user.name "자동 싱크 봇"
+          git config --global user.email "auto-sync@github.com"
+
+      - name: upstream 탐지
+        id: detect
+        run: |
+          set -e
+          UPSTREAM="${{ github.event.repository.parent.full_name }}"
+          [ -z "$UPSTREAM" ] && UPSTREAM="${DEFAULT_UPSTREAM}"
+          echo "upstream=$UPSTREAM" >> "$GITHUB_OUTPUT"
+          echo "🔎 upstream: $UPSTREAM"
+
+      - name: upstream 등록/패치
+        run: |
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream "https://github.com/${{ steps.detect.outputs.upstream }}.git"
+          git fetch upstream --prune
+
+      - name: main 브랜치 싱크 (SHA 기준 푸시)
+        shell: bash
+        run: |
+          set -e
+          git checkout main
+          if git merge --ff-only upstream/main 2>/dev/null; then
+            echo "ℹ️ fast-forward 병합"
+          else
+            git merge upstream/main --no-edit
+            echo "ℹ️ 일반 병합"
+          fi
+          LOCAL_SHA=$(git rev-parse HEAD)
+          REMOTE_SHA=$(git rev-parse origin/main || echo "none")
+          if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
+            git push origin HEAD:main
+            echo "✅ main 푸시 완료"
+          else
+            echo "ℹ️ main 최신 (푸시 불필요)"
+          fi
+
+      - name: 요약
+        run: |
+          echo "🎉 싱크 완료"
+          git log --oneline -n 5
