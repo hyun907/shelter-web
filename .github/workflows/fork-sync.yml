@@ -22,7 +22,7 @@ jobs:
 
       - name: Add Upstream Repository
         run: |
-          git remote add upstream https://x-access-token:${{ secrets.SEUNGHYUN_SECRET_NAME }}@github.com/likelion-ssu/lion-s-study.git
+          git remote add upstream https://x-access-token:${{ secrets.dispatch }}@github.com/K-PaaS-Team22/shelter-web
 
       - name: Verify Remotes
         run: git remote -v
