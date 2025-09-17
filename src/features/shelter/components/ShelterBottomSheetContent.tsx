@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import type { NearbyShelterApiItem } from "../schemas/shelter.schema";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 
+export type ShelterItem = NearbyShelterApiItem;
+
 export function ShelterBottomSheetContent({
   items,
   error
