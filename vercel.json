@@ -1,3 +1,7 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "env": {
+    "VITE_API_BASE_URL": "https://your-api-server.com",
+    "VITE_MEMBER_API_URL": "https://your-member-api-server.com"
+  }
 }
