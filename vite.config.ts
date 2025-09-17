@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: true,
+      historyApiFallback: true,
       proxy: {
         "/weather": {
           target: proxyTarget,
