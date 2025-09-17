@@ -1,16 +1,25 @@
-name: 포크 자동 싱크
+name: Auto Sync Fork with Upstream
 
 on:
-  workflow_dispatch:          # 수동 실행 가능
+  workflow_dispatch:
+    inputs:
+      upstream:
+        description: '원본 저장소'
+        required: false
+        default: K-PaaS-Team22/shelter-web
   push:
-    branches: [ main ]        # 내 포크 main에 push 될 때도 실행
+    branches: [ main ]
 
 permissions:
-  contents: write             # push 권한 필요
+  contents: write
+
+env:
+  DEFAULT_UPSTREAM: K-PaaS-Team22/shelter-web
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # 포크에서만 실행 (원본이면 스킵)
     if: ${{ github.event.repository.fork == true }}
 
     steps:
@@ -25,30 +34,64 @@ jobs:
           git config --global user.name "자동 싱크 봇"
           git config --global user.email "auto-sync@github.com"
 
-      - name: upstream 원본 추가
+      - name: upstream 원본 자동 탐지
+        id: detect
+        shell: bash
         run: |
+          set -e
+
+          # 1) 이벤트 컨텍스트(parent) 시도
           UPSTREAM="${{ github.event.repository.parent.full_name }}"
+          # 2) 수동 입력(workflow_dispatch inputs) 시도
           if [ -z "$UPSTREAM" ]; then
-            echo "❌ 원본 저장소(parent)를 찾을 수 없습니다. 포크가 맞나요?"
+            UPSTREAM="${{ inputs.upstream }}"
+          fi
+          # 3) GitHub REST API로 parent 조회(컨텍스트에 없을 수 있음)
+          if [ -z "$UPSTREAM" ]; then
+            if command -v gh >/dev/null 2>&1; then
+              UP=$(gh api repos/${{ github.repository }} --jq '.parent.full_name' 2>/dev/null || true)
+              if [ -n "$UP" ] && [ "$UP" != "null" ]; then
+                UPSTREAM="$UP"
+              fi
+            fi
+          fi
+          # 4) 최후의 기본값(환경변수)
+          if [ -z "$UPSTREAM" ]; then
+            UPSTREAM="${DEFAULT_UPSTREAM}"
+          fi
+
+          if [ -z "$UPSTREAM" ]; then
+            echo "❌ 원본 저장소를 찾지 못했습니다. workflow_dispatch 입력값 또는 env.DEFAULT_UPSTREAM을 설정하세요."
             exit 1
           fi
-          git remote add upstream "https://github.com/$UPSTREAM.git"
+
+          echo "🔎 감지된 upstream: $UPSTREAM"
+          echo "upstream=$UPSTREAM" >> "$GITHUB_OUTPUT"
+
+      - name: upstream 리모트 추가/가져오기
+        run: |
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream "https://github.com/${{ steps.detect.outputs.upstream }}.git"
           git fetch upstream --prune
 
       - name: main 브랜치 싱크
+        shell: bash
         run: |
+          set -e
           git checkout main
           git merge upstream/main --no-edit || exit 1
 
           if ! git diff --quiet origin/main..HEAD; then
             git push origin main
-            echo "✅ main 브랜치가 원본과 동기화되었습니다."
+            echo "✅ main 브랜치 동기화 완료"
           else
-            echo "ℹ️ main 브랜치는 이미 최신 상태입니다."
+            echo "ℹ️ main 브랜치는 이미 최신입니다"
           fi
 
       - name: develop 브랜치 싱크 (선택)
+        shell: bash
         run: |
+          set -e
           if git show-ref --verify --quiet refs/remotes/upstream/develop; then
             if git show-ref --verify --quiet refs/heads/develop; then
               git checkout develop
@@ -59,16 +102,16 @@ jobs:
 
             if ! git diff --quiet origin/develop..HEAD; then
               git push origin develop
-              echo "✅ develop 브랜치가 원본과 동기화되었습니다."
+              echo "✅ develop 브랜치 동기화 완료"
             else
-              echo "ℹ️ develop 브랜치는 이미 최신 상태입니다."
+              echo "ℹ️ develop 브랜치는 이미 최신입니다"
             fi
           else
-            echo "ℹ️ 원본 저장소에는 develop 브랜치가 없습니다."
+            echo "ℹ️ upstream에 develop 브랜치가 없습니다"
           fi
 
       - name: 요약
         run: |
-          echo "🎉 포크 싱크 완료!"
+          echo "🎉 포크 싱크 완료"
           echo "📅 완료 시각: $(date)"
           echo "🔄 마지막 커밋: $(git log -1 --pretty=format:'%h - %s (%an, %ar)')"
