@@ -28,6 +28,12 @@ export async function fetchTodayWeather(params: {
   // 배포 환경에서 URL 확인을 위한 로깅
   console.log("날씨 API 요청 URL:", urlStr);
   console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
+  console.log(
+    "모든 VITE_ 환경 변수:",
+    Object.keys(import.meta.env).filter(key => key.startsWith("VITE_"))
+  );
+  console.log("현재 모드:", import.meta.env.MODE);
+  console.log("개발 모드인가?", import.meta.env.DEV);
 
   const res = await axios.get(urlStr, {
     headers: {
