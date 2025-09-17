@@ -5,13 +5,11 @@ import { normalizeTemp, toSkyKorean, toPtyKorean } from "../utils/weather";
 export function WeatherModalContent({
   weather,
   loading,
-  error,
-  rawResponse
+  error
 }: {
   weather: TodayWeatherResponse | null;
   loading?: boolean;
   error?: string | null;
-  rawResponse?: unknown;
 }) {
   return (
     <>
