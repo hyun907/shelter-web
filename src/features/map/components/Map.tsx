@@ -1,4 +1,4 @@
-import { GoogleMap, Circle, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, Circle, Polyline, useLoadScript } from "@react-google-maps/api";
 import { useCurrentPosition } from "../hooks/useCurrentPosition";
 import { useTodayWeather } from "../hooks/useTodayWeather";
 import { useMapBottomSheet } from "../hooks/useMapBottomSheet";
@@ -8,6 +8,8 @@ import { PositionLoadingOverlay } from "./PositionLoadingOverlay";
 import { useNearbyShelters } from "@/features/shelter";
 import { useModalStore } from "@/common/hooks/useModalStore";
 import { useEffect, useRef } from "react";
+import { useRouteStore } from "@/features/route/hooks/useRouteStore";
+import { useRoutePath } from "@/features/route/services/useRoutePath";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -22,6 +24,18 @@ export default function Map() {
   const { open, close } = useModalStore();
   const lastErrorRef = useRef<string | null>(null);
 
+  // 목적지 불러오기
+  const { destination } = useRouteStore();
+  const { data: routeData } = useRoutePath(
+    position && destination
+      ? {
+          startLat: position.lat,
+          startLot: position.lng,
+          goalLat: destination.lat,
+          goalLot: destination.lng
+        }
+      : { startLat: 0, startLot: 0, goalLat: 0, goalLot: 0 }
+  );
   useMapBottomSheet(isLoaded, position, shelters, sheltersError);
 
   // 위치 에러 발생 시 모달 표시
@@ -64,6 +78,17 @@ export default function Map() {
         zoom={position ? 15 : 12}
         options={{ fullscreenControl: false, streetViewControl: false, mapTypeControl: false }}
       >
+        {routeData?.route?.traoptimal?.[0]?.path?.length &&
+          routeData.route.traoptimal[0].path!.length > 0 && (
+            <Polyline
+              path={routeData.route.traoptimal[0].path.map(([lng, lat]: [number, number]) => ({
+                lat,
+                lng
+              }))}
+              options={{ strokeColor: "#0f3cc5ff", strokeWeight: 4 }}
+            />
+          )}
+
         {position && <WeatherOverlay weather={weather} loading={loading} error={error} />}
 
         {position && accuracy != null && (
