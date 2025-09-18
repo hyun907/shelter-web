@@ -31,7 +31,27 @@ jobs:
       - name: Merge upstream/main into fork main
         run: |
           git checkout main
-          git merge --no-edit upstream/main
+          git merge --no-edit upstream/main || true
+
+      - name: Keep fork's workflows (avoid workflow push)
+        run: |
+          git fetch origin main
+          git restore --source=origin/main --staged --worktree .github/workflows || true
+
+      - name: Skip if no changes
+        id: diffcheck
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure authenticated remote for GITHUB_TOKEN
+        if: steps.diffcheck.outputs.changes == 'true'
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Push to origin
-        run: git push origin main
+        if: steps.diffcheck.outputs.changes == 'true'
+        run: git push origin HEAD:main
