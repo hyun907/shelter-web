@@ -7,19 +7,31 @@ import styles from "./ShelterDetail.module.css";
 import Header from "@/common/components/header/Header";
 import { formatTime } from "../utils/formatTime";
 import { formatDate } from "../utils/formatDate";
+import { useRouteStore } from "@/features/route/hooks/useRouteStore";
+import { useNavigate } from "react-router-dom";
+import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 
 export default function ShelterDetail() {
   const [params] = useSearchParams();
   const shelterParam = params.get("shelter");
   const shelter: NearbyShelterApiItem | null = shelterParam ? JSON.parse(shelterParam) : null;
 
+  const { close } = useBottomSheetStore();
+  const { setDestination } = useRouteStore();
+  const navigate = useNavigate();
+  const onClick = () => {
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setDestination({ lat, lng });
+      close();
+      navigate("/map");
+    }
+  };
+
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
   const { isLoaded } = useLoadScript({ googleMapsApiKey: apiKey ?? "" });
 
   if (!shelter) return <div>쉼터 정보가 없습니다.</div>;
   if (!apiKey || !isLoaded) return <div>지도 로딩 중...</div>;
-
-  const onClick = () => console.log("경로보기");
 
   const lat = typeof shelter.LA === "string" ? parseFloat(shelter.LA) : shelter.LA;
   const lng = typeof shelter.LO === "string" ? parseFloat(shelter.LO) : shelter.LO;
@@ -103,8 +115,7 @@ export default function ShelterDetail() {
           </div>
         </div>
       </div>
-
-      <Button title="경로 보기" className={styles.routeButton} onClick={onClick} />
+      <Button title="경로 보기" className={styles.routeButton} onClick={onClick} />;
     </div>
   );
 }

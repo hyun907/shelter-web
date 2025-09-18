@@ -21,6 +21,10 @@ export default defineConfig(({ mode }) => {
         "/shelter": {
           target: proxyTarget,
           changeOrigin: true
+        },
+        "/route": {
+          target: proxyTarget,
+          changeOrigin: true
         }
       }
     }
