@@ -22,36 +22,30 @@ jobs:
           git config --global user.name "github-actions[bot]"
 
       - name: Add upstream
-        run: |
-          git remote add upstream https://github.com/K-PaaS-Team22/shelter-web.git
+        run: git remote add upstream https://github.com/K-PaaS-Team22/shelter-web.git
 
-      - name: Fetch upstream
-        run: git fetch upstream
+      - name: Fetch remotes
+        run: |
+          git fetch upstream
+          git fetch origin
 
       - name: Merge upstream/main into fork main
         run: |
           git checkout main
           git merge --no-edit upstream/main || true
 
-      - name: Keep fork's workflows (avoid workflow push)
+      - name: Keep fork's workflows unchanged
         run: |
-          git fetch origin main
+          # git restore --source=origin/main --staged --worktree .github/workflows/gitlab-mirror.yml
           git restore --source=origin/main --staged --worktree .github/workflows || true
 
-      - name: Skip if no changes
-        id: diffcheck
-        run: |
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "changes=true" >> $GITHUB_OUTPUT
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            git commit -am "chore: keep fork workflows unchanged during sync [skip ci]" || true
           fi
 
-      - name: Configure authenticated remote for GITHUB_TOKEN
-        if: steps.diffcheck.outputs.changes == 'true'
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
       - name: Push to origin
-        if: steps.diffcheck.outputs.changes == 'true'
-        run: git push origin HEAD:main
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git
+          git push origin HEAD:main
