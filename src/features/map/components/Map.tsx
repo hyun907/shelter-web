@@ -89,7 +89,15 @@ export default function Map() {
             />
           )}
 
-        {position && <WeatherOverlay weather={weather} loading={loading} error={error} />}
+        {position && (
+          <WeatherOverlay
+            weather={weather}
+            loading={loading}
+            error={error}
+            shelters={shelters}
+            sheltersError={sheltersError}
+          />
+        )}
 
         {position && accuracy != null && (
           <Circle
