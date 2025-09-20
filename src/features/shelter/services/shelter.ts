@@ -14,7 +14,25 @@ export async function fetchNearbyShelters(params: {
   const season = getCurrentSeason();
   const endpoint = season === "summer" ? "/shelter/summer/near" : "/shelter/winter/near";
 
-  // 환경별 API Base URL 설정
+  // 개발 환경에서는 프록시를 위해 상대 경로 사용
+  if (import.meta.env.DEV) {
+    const res = await axios.get(endpoint, {
+      headers: {
+        userLat: String(userLat),
+        userLot: String(userLot)
+      },
+      params: { userLat, userLot },
+      signal
+    });
+
+    const raw = res.data as unknown;
+    if (Array.isArray(raw)) return raw as NearbyShelterApiResponse;
+    if (raw && typeof raw === "object" && Array.isArray((raw as Record<string, unknown>).data))
+      return (raw as Record<string, unknown>).data as NearbyShelterApiResponse;
+    return [] as NearbyShelterApiResponse;
+  }
+
+  // 배포 환경: 절대 경로 사용
   let apiBase: string | undefined;
 
   if (import.meta.env.VITE_API_BASE_URL) {
@@ -23,9 +41,6 @@ export async function fetchNearbyShelters(params: {
   } else if (import.meta.env.VITE_PROXY_TARGET) {
     // Vercel에서 자동 설정된 프록시 타겟 사용
     apiBase = import.meta.env.VITE_PROXY_TARGET;
-  } else if (import.meta.env.DEV) {
-    // 개발 환경: 프록시 사용 (상대 경로)
-    apiBase = undefined; // 상대 경로로 프록시 사용
   } else {
     // fallback
     apiBase = baseUrl;
@@ -44,7 +59,7 @@ export async function fetchNearbyShelters(params: {
 
   const raw = res.data as unknown;
   if (Array.isArray(raw)) return raw as NearbyShelterApiResponse;
-  if (raw && typeof raw === "object" && Array.isArray((raw as any).data))
-    return (raw as any).data as NearbyShelterApiResponse;
+  if (raw && typeof raw === "object" && Array.isArray((raw as Record<string, unknown>).data))
+    return (raw as Record<string, unknown>).data as NearbyShelterApiResponse;
   return [] as NearbyShelterApiResponse;
 }
