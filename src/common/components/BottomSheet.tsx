@@ -23,13 +23,27 @@ export function BottomSheet() {
         collapseToBottom: null
       });
     }
-  }, [isOpen, interaction.expandToTop, interaction.collapseToBottom]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
       useBottomSheetStore.setState({ translateY: interaction.translateY });
+
+      if (interaction.sheetRef.current && !interaction.measured) {
+        requestAnimationFrame(() => {
+          const el = interaction.sheetRef.current;
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            const h = rect.height;
+            if (h > 0) {
+              const maxTranslate = Math.max(h - PEEK_HEIGHT, 0);
+              interaction.sheetRef.current.style.transform = `translateY(${maxTranslate}px)`;
+            }
+          }
+        });
+      }
     }
-  }, [isOpen, interaction.translateY]);
+  }, [isOpen, interaction.translateY, interaction.measured]);
 
   useEffect(() => {
     if (!isOpen) return;
