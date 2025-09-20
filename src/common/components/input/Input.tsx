@@ -20,7 +20,7 @@ export default function Input({ Icon, secureTextEntry: secureEntryProp, ...props
       <input
         className={`${styles.input} ${Icon ? styles.hasIcon : ""}`}
         {...props}
-        type={secureTextEntry ? "password" : props.type || "text"}
+        type={secureEntryProp ? (secureTextEntry ? "password" : "text") : props.type || "text"}
       />
 
       {secureEntryProp && (

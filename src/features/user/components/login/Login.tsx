@@ -33,9 +33,8 @@ export default function Login() {
         <Input
           Icon={FaLock}
           placeholder="비밀번호"
-          type="password"
-          {...register("memberPassword")}
           secureTextEntry
+          {...register("memberPassword")}
         />
         {mutation.isError && (
           <div className={styles.error}>아이디 또는 비밀번호가 올바르지 않습니다.</div>
