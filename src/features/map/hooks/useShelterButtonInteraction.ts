@@ -14,7 +14,6 @@ export function useShelterButtonInteraction(
   const translateY = useBottomSheetStore(state => state.translateY);
   const expandToTop = useBottomSheetStore(state => state.expandToTop);
   const collapseToBottom = useBottomSheetStore(state => state.collapseToBottom);
-  const open = useBottomSheetStore(state => state.open);
   const openAndExpand = useBottomSheetStore(state => state.openAndExpand);
   const setTranslateY = useBottomSheetStore(state => state.setTranslateY);
 

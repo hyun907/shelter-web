@@ -24,7 +24,10 @@ export function WeatherButton({
 }: WeatherButtonProps) {
   const season = getCurrentSeason();
   const seasonClass = season === "summer" ? styles.buttonSummer : styles.buttonWinter;
-  const { handleShelterClick } = useShelterButtonInteraction(shelters, sheltersError);
+  const { handleShelterClick } = useShelterButtonInteraction(
+    shelters ?? null,
+    sheltersError ?? null
+  );
 
   return (
     <div className={`${styles.button} ${seasonClass}`}>
