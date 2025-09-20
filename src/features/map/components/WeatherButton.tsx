@@ -3,18 +3,28 @@ import { getCurrentSeason } from "../utils/weather";
 import { WeatherIcon } from "./WeatherIcon";
 import { useShelterButtonInteraction } from "../hooks/useShelterButtonInteraction";
 import type { TodayWeatherResponse } from "../schemas/weather.schema";
+import type { NearbyShelterApiItem } from "@/features/shelter/schemas/shelter.schema";
 
 export type WeatherButtonProps = {
   label: string;
   weather?: TodayWeatherResponse | null;
   disabled?: boolean;
   onClick?: () => void;
+  shelters?: NearbyShelterApiItem[] | null;
+  sheltersError?: string | null;
 };
 
-export function WeatherButton({ label, weather, disabled, onClick }: WeatherButtonProps) {
+export function WeatherButton({
+  label,
+  weather,
+  disabled,
+  onClick,
+  shelters,
+  sheltersError
+}: WeatherButtonProps) {
   const season = getCurrentSeason();
   const seasonClass = season === "summer" ? styles.buttonSummer : styles.buttonWinter;
-  const { handleShelterClick } = useShelterButtonInteraction();
+  const { handleShelterClick } = useShelterButtonInteraction(shelters, sheltersError);
 
   return (
     <div className={`${styles.button} ${seasonClass}`}>
