@@ -23,7 +23,7 @@ export function BottomSheet() {
         collapseToBottom: null
       });
     }
-  }, [isOpen, interaction.expandToTop, interaction.collapseToBottom]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {

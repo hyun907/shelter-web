@@ -15,24 +15,33 @@ export function useShelterButtonInteraction(
   const expandToTop = useBottomSheetStore(state => state.expandToTop);
   const collapseToBottom = useBottomSheetStore(state => state.collapseToBottom);
   const open = useBottomSheetStore(state => state.open);
+  const openAndExpand = useBottomSheetStore(state => state.openAndExpand);
+  const setTranslateY = useBottomSheetStore(state => state.setTranslateY);
 
   const handleShelterClick = () => {
     if (!isOpen) {
-      // 바텀시트가 닫혀있을 때는 열기
       if (sheltersError) {
-        open(createElement(ShelterBottomSheetContent, { error: sheltersError }), {
+        openAndExpand(createElement(ShelterBottomSheetContent, { error: sheltersError }), {
           ariaLabel: "대피소 목록"
         });
       } else if (shelters && Array.isArray(shelters)) {
         const items = Array.isArray(shelters) ? shelters : [];
-        open(createElement(ShelterBottomSheetContent, { items }), { ariaLabel: "대피소 목록" });
+        openAndExpand(createElement(ShelterBottomSheetContent, { items }), {
+          ariaLabel: "대피소 목록"
+        });
       } else {
-        open(createElement(ShelterBottomSheetContent, { items: [] }), { ariaLabel: "대피소 목록" });
+        openAndExpand(createElement(ShelterBottomSheetContent, { items: [] }), {
+          ariaLabel: "대피소 목록"
+        });
       }
+
+      // 확실하게 translateY를 0으로 설정
+      setTimeout(() => {
+        setTranslateY(0);
+      }, 50);
       return;
     }
 
-    // 바텀시트가 열려있을 때는 토글 동작
     const isAtTop = translateY < 50;
 
     if (isAtTop && collapseToBottom) {

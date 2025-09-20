@@ -250,9 +250,9 @@ export function useBottomSheetInteraction(peekHeight: number) {
   );
 
   const expandToTop = useCallback(() => {
-    if (isDragging || !measured) return;
+    if (isDragging) return;
     animateToPosition(0);
-  }, [isDragging, measured, animateToPosition]);
+  }, [isDragging, animateToPosition]);
 
   const collapseToBottom = useCallback(() => {
     if (isDragging || !measured) return;

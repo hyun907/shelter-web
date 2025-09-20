@@ -41,8 +41,21 @@ export function WeatherButton({
       <button
         type="button"
         className={`${styles.shelterButton} ${season === "summer" ? styles.shelterButtonSummer : styles.shelterButtonWinter}`}
-        onClick={handleShelterClick}
-        disabled={disabled}
+        onClick={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleShelterClick();
+        }}
+        onTouchEnd={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleShelterClick();
+        }}
+        disabled={false}
+        style={{
+          minHeight: "44px",
+          minWidth: "120px"
+        }}
       >
         주변 쉼터 보기
       </button>
