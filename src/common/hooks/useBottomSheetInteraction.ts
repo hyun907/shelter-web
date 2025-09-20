@@ -24,12 +24,16 @@ export function useBottomSheetInteraction(peekHeight: number) {
   const startTranslateRef = useRef(0);
   const maxTranslateRef = useRef(0);
   const animationFrameRef = useRef<number | null>(null);
+  const translateYRef = useRef(1000);
 
-  // 초기값을 큰 값으로 설정하여 처음부터 화면 밖에 위치
   const [translateY, setTranslateY] = useState(1000);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [measured, setMeasured] = useState(false);
+
+  useEffect(() => {
+    translateYRef.current = translateY;
+  }, [translateY]);
 
   const recalc = useCallback(() => {
     const el = sheetRef.current;
@@ -48,20 +52,20 @@ export function useBottomSheetInteraction(peekHeight: number) {
     const maxTranslate = Math.max(h - peekHeight, 0);
     maxTranslateRef.current = maxTranslate;
 
-    // 항상 바텀 위치로 설정 (measured 상태와 관계없이)
-    setTranslateY(maxTranslate);
-
     if (!measured) {
+      setTranslateY(maxTranslate);
       setMeasured(true);
+    } else {
+      if (translateYRef.current >= maxTranslateRef.current * 0.8) {
+        setTranslateY(maxTranslate);
+      }
     }
   }, [peekHeight, measured]);
 
   useEffect(() => {
-    // 초기 측정은 DOM이 완전히 렌더링된 후 실행
     const measureInitial = () => {
-      // 여러 프레임에 걸쳐 측정 시도
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 20;
 
       const tryMeasure = () => {
         const el = sheetRef.current;
@@ -83,14 +87,12 @@ export function useBottomSheetInteraction(peekHeight: number) {
         recalc();
       };
 
-      requestAnimationFrame(tryMeasure);
+      tryMeasure();
     };
 
     measureInitial();
 
-    // ResizeObserver를 사용하여 더 정확한 크기 변경 감지
     const resizeObserver = new ResizeObserver(() => {
-      // measured가 true일 때만 recalc 호출하여 불필요한 재계산 방지
       if (measured) {
         const el = sheetRef.current;
         if (!el) return;
@@ -102,8 +104,7 @@ export function useBottomSheetInteraction(peekHeight: number) {
           const maxTranslate = Math.max(h - peekHeight, 0);
           maxTranslateRef.current = maxTranslate;
 
-          // 현재 위치가 collapsed 상태라면 새로운 바텀 위치로 업데이트
-          if (translateY >= maxTranslateRef.current * 0.8) {
+          if (translateYRef.current >= maxTranslateRef.current * 0.8) {
             setTranslateY(maxTranslate);
           }
         }
@@ -114,7 +115,6 @@ export function useBottomSheetInteraction(peekHeight: number) {
       resizeObserver.observe(sheetRef.current);
     }
 
-    // 윈도우 리사이즈 이벤트도 유지
     const onResize = () => {
       if (measured) {
         const el = sheetRef.current;
@@ -127,8 +127,7 @@ export function useBottomSheetInteraction(peekHeight: number) {
           const maxTranslate = Math.max(h - peekHeight, 0);
           maxTranslateRef.current = maxTranslate;
 
-          // 현재 위치가 collapsed 상태라면 새로운 바텀 위치로 업데이트
-          if (translateY >= maxTranslateRef.current * 0.8) {
+          if (translateYRef.current >= maxTranslateRef.current * 0.8) {
             setTranslateY(maxTranslate);
           }
         }
@@ -147,7 +146,6 @@ export function useBottomSheetInteraction(peekHeight: number) {
   }, [recalc, measured]);
 
   const onPointerDown = (e: React.PointerEvent) => {
-    // 측정이 완료되지 않았으면 동작하지 않음
     if (!measured || e.button !== 0) return;
     e.preventDefault();
 
@@ -166,7 +164,10 @@ export function useBottomSheetInteraction(peekHeight: number) {
   const onPointerMove = (e: React.PointerEvent) => {
     if (!isDragging || !measured) return;
     const dy = e.clientY - startYRef.current;
-    const next = Math.min(Math.max(startTranslateRef.current + dy, 0), maxTranslateRef.current);
+    const next = Math.min(
+      Math.max(startTranslateRef.current + dy * 0.95, 0),
+      maxTranslateRef.current
+    );
     setTranslateY(next);
   };
 
@@ -174,9 +175,8 @@ export function useBottomSheetInteraction(peekHeight: number) {
     if (!isDragging || !measured) return;
     setIsDragging(false);
     const over = maxTranslateRef.current;
-    const snapTo = translateY < over / 2 ? 0 : over;
+    const snapTo = translateY < over * 0.4 ? 0 : over;
 
-    // 애니메이션으로 스냅
     animateToPosition(snapTo);
   };
 
@@ -199,7 +199,10 @@ export function useBottomSheetInteraction(peekHeight: number) {
     if (!isDragging || !measured || e.touches.length === 0) return;
     const touch = e.touches[0];
     const dy = touch.clientY - startYRef.current;
-    const next = Math.min(Math.max(startTranslateRef.current + dy, 0), maxTranslateRef.current);
+    const next = Math.min(
+      Math.max(startTranslateRef.current + dy * 0.95, 0),
+      maxTranslateRef.current
+    );
     setTranslateY(next);
   };
 
@@ -207,13 +210,11 @@ export function useBottomSheetInteraction(peekHeight: number) {
     if (!isDragging || !measured) return;
     setIsDragging(false);
     const over = maxTranslateRef.current;
-    const snapTo = translateY < over / 2 ? 0 : over;
+    const snapTo = translateY < over * 0.4 ? 0 : over;
 
-    // 애니메이션으로 스냅
     animateToPosition(snapTo);
   };
 
-  // 공통 애니메이션 함수
   const animateToPosition = useCallback(
     (targetY: number) => {
       if (animationFrameRef.current) {
@@ -223,15 +224,15 @@ export function useBottomSheetInteraction(peekHeight: number) {
       setIsAnimating(true);
 
       const startY = translateY;
-      const duration = 300;
+      const duration = 400;
       const startTime = performance.now();
 
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-        const currentY = startY + (targetY - startY) * easeOutCubic;
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentY = startY + (targetY - startY) * easeOutQuart;
 
         setTranslateY(currentY);
 
