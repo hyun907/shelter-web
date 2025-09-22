@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "");
-  const proxyTarget = env.VITE_PROXY_TARGET || "http://localhost:8080";
+  const proxyTarget = env.VITE_PROXY_TARGET;
 
   return {
     plugins: [react()],
@@ -17,15 +17,18 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/weather": {
           target: proxyTarget,
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/weather/, "/api/weather")
         },
         "/shelter": {
           target: proxyTarget,
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/shelter/, "/api/shelter")
         },
         "/route": {
           target: proxyTarget,
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/route/, "/api/route")
         }
       }
     }
