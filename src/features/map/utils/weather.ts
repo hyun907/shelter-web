@@ -1,3 +1,11 @@
+import icRain from "@/assets/icon/ic_rain.svg";
+import icCloudRain from "@/assets/icon/ic_cloud_rain.svg";
+import icSnow from "@/assets/icon/ic_snow.svg";
+import icSun from "@/assets/icon/ic_sun.svg";
+import icCloudSmall from "@/assets/icon/ic_cloud_small.svg";
+import icCloudLarge from "@/assets/icon/ic_cloud_large.svg";
+import icCloudy from "@/assets/icon/ic_cloudy.svg";
+
 export function normalizeTemp(tmp: string | number | undefined) {
   if (tmp == null) return "-";
   const str = String(tmp).trim();
@@ -63,32 +71,32 @@ export function getWeatherIcon(sky: string, pty?: string): string {
   if (pty && pty !== "0") {
     switch (pty) {
       case "1": // 비
-        return "/src/assets/icon/ic_rain.svg";
+        return icRain;
       case "2": // 비/눈
-        return "/src/assets/icon/ic_cloud_rain.svg";
+        return icCloudRain;
       case "3": // 눈
-        return "/src/assets/icon/ic_snow.svg";
+        return icSnow;
       case "5": // 비
-        return "/src/assets/icon/ic_rain.svg";
+        return icRain;
       case "6": // 비/눈
-        return "/src/assets/icon/ic_cloud_rain.svg";
+        return icCloudRain;
       case "7": // 눈
-        return "/src/assets/icon/ic_snow.svg";
+        return icSnow;
       default:
-        return "/src/assets/icon/ic_rain.svg";
+        return icRain;
     }
   }
 
   switch (sky) {
     case "1": // 맑음
-      return "/src/assets/icon/ic_sun.svg";
+      return icSun;
     case "2": // 구름조금
-      return "/src/assets/icon/ic_cloud_small.svg";
+      return icCloudSmall;
     case "3": // 구름많음
-      return "/src/assets/icon/ic_cloud_large.svg";
+      return icCloudLarge;
     case "4": // 흐림
-      return "/src/assets/icon/ic_cloudy.svg";
+      return icCloudy;
     default:
-      return "/src/assets/icon/ic_sun.svg";
+      return icSun;
   }
 }

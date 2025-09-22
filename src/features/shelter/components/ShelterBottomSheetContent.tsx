@@ -36,7 +36,7 @@ export function ShelterBottomSheetContent({
               {item.RN_DTL_ADRES || item.DTL_ADRES || "주소 없음"}
             </div>
             <div className={styles.meta}>
-              <span className={styles.distance}>{item.distance}m</span>
+              <span className={styles.distance}>{item.distance}km</span>
             </div>
           </button>
         ))}
