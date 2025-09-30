@@ -63,14 +63,6 @@ export function BottomSheet() {
       onTouchStart={interaction.onTouchStart}
       onTouchMove={interaction.onTouchMove}
       onTouchEnd={interaction.onTouchEnd}
-      onBackdropClick={() =>
-        useBottomSheetStore.setState({
-          content: null,
-          ariaLabel: null,
-          expandToTop: null,
-          collapseToBottom: null
-        })
-      }
       ariaLabel={ariaLabel ?? undefined}
     >
       {content}
