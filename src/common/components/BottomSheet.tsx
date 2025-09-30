@@ -3,16 +3,29 @@ import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { useEffect } from "react";
 import { useBottomSheetInteraction } from "@/common/hooks/useBottomSheetInteraction";
 import { BottomSheetView } from "@/common/components/BottomSheetView";
+import { useLocation } from "react-router-dom";
 
 const PEEK_HEIGHT = 56;
 
 export function BottomSheet() {
-  const { isOpen, content, close, options } = useBottomSheetStore();
+  const { content, ariaLabel } = useBottomSheetStore();
+  const location = useLocation();
 
   const interaction = useBottomSheetInteraction(PEEK_HEIGHT);
 
+  // 라우트 변경 시 바텀시트 초기화
   useEffect(() => {
-    if (isOpen) {
+    useBottomSheetStore.setState({
+      content: null,
+      ariaLabel: null,
+      expandToTop: null,
+      collapseToBottom: null
+    });
+  }, [location.pathname]);
+
+  // 드래그하거나 스냅(snap)할 수 있는지를 결정
+  useEffect(() => {
+    if (content) {
       useBottomSheetStore.setState({
         expandToTop: interaction.expandToTop,
         collapseToBottom: interaction.collapseToBottom
@@ -23,38 +36,16 @@ export function BottomSheet() {
         collapseToBottom: null
       });
     }
-  }, [isOpen]);
+  }, [content, interaction.expandToTop, interaction.collapseToBottom]);
 
+  // 바텀 시트 위치 값을 전파하여 버튼 토글 로직에서 사용할 수 있도록만 동기화
   useEffect(() => {
-    if (isOpen) {
+    if (content) {
       useBottomSheetStore.setState({ translateY: interaction.translateY });
-
-      if (interaction.sheetRef.current && !interaction.measured) {
-        requestAnimationFrame(() => {
-          const el = interaction.sheetRef.current;
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            const h = rect.height;
-            if (h > 0) {
-              const maxTranslate = Math.max(h - PEEK_HEIGHT, 0);
-              interaction.sheetRef.current.style.transform = `translateY(${maxTranslate}px)`;
-            }
-          }
-        });
-      }
     }
-  }, [isOpen, interaction.translateY, interaction.measured]);
+  }, [content, interaction.translateY]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isOpen, close]);
-
-  if (!isOpen) return null;
+  if (!content) return null;
 
   const root = document.getElementById("modal-root") ?? document.body;
 
@@ -72,8 +63,15 @@ export function BottomSheet() {
       onTouchStart={interaction.onTouchStart}
       onTouchMove={interaction.onTouchMove}
       onTouchEnd={interaction.onTouchEnd}
-      onBackdropClick={() => (options?.onBackdropClick ? options.onBackdropClick() : close())}
-      ariaLabel={options?.ariaLabel}
+      onBackdropClick={() =>
+        useBottomSheetStore.setState({
+          content: null,
+          ariaLabel: null,
+          expandToTop: null,
+          collapseToBottom: null
+        })
+      }
+      ariaLabel={ariaLabel ?? undefined}
     >
       {content}
     </BottomSheetView>,

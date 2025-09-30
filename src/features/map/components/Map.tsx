@@ -8,6 +8,7 @@ import { PositionLoadingOverlay } from "./PositionLoadingOverlay";
 import { useNearbyShelters } from "@/features/shelter";
 import { useModalStore } from "@/common/hooks/useModalStore";
 import { useEffect, useRef } from "react";
+import { BottomSheet } from "@/common/components/BottomSheet";
 import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useRoutePath } from "@/features/route/services/useRoutePath";
 
@@ -56,10 +57,7 @@ export default function Map() {
             }}
             onClose={close}
           />,
-          {
-            ariaLabel: "위치 정보 오류",
-            onBackdropClick: close
-          }
+          "위치 정보 오류"
         );
       }
     } else if (!positionError) {
@@ -68,68 +66,71 @@ export default function Map() {
     }
   }, [positionError, isLoading, open, close, retry]);
 
-  if (!apiKey || !isLoaded) return null;
+  if (!apiKey) return null;
 
   return (
     <>
-      <GoogleMap
-        mapContainerStyle={{ width: "100%", height: "100%" }}
-        center={position ?? DEFAULT_CENTER}
-        zoom={position ? 15 : 12}
-        options={{ fullscreenControl: false, streetViewControl: false, mapTypeControl: false }}
-      >
-        {routeData?.route?.traoptimal?.[0]?.path?.length &&
-          routeData.route.traoptimal[0].path!.length > 0 && (
-            <Polyline
-              path={routeData.route.traoptimal[0].path.map(([lng, lat]: [number, number]) => ({
-                lat,
-                lng
-              }))}
-              options={{ strokeColor: "#0f3cc5ff", strokeWeight: 4 }}
+      {isLoaded && (
+        <GoogleMap
+          mapContainerStyle={{ width: "100%", height: "100%" }}
+          center={position ?? DEFAULT_CENTER}
+          zoom={position ? 15 : 12}
+          options={{ fullscreenControl: false, streetViewControl: false, mapTypeControl: false }}
+        >
+          {routeData?.route?.traoptimal?.[0]?.path?.length &&
+            routeData.route.traoptimal[0].path!.length > 0 && (
+              <Polyline
+                path={routeData.route.traoptimal[0].path.map(([lng, lat]: [number, number]) => ({
+                  lat,
+                  lng
+                }))}
+                options={{ strokeColor: "#0f3cc5ff", strokeWeight: 4 }}
+              />
+            )}
+
+          {position && (
+            <WeatherOverlay
+              weather={weather}
+              loading={loading}
+              error={error}
+              shelters={shelters}
+              sheltersError={sheltersError}
             />
           )}
 
-        {position && (
-          <WeatherOverlay
-            weather={weather}
-            loading={loading}
-            error={error}
-            shelters={shelters}
-            sheltersError={sheltersError}
-          />
-        )}
+          {position && accuracy != null && (
+            <Circle
+              center={position}
+              radius={accuracy}
+              options={{
+                fillColor: "#487fee9b",
+                fillOpacity: 0.2,
+                strokeColor: "#487fee9b",
+                strokeOpacity: 0.4,
+                strokeWeight: 1,
+                clickable: false
+              }}
+            />
+          )}
+          {position && (
+            <Circle
+              center={position}
+              radius={6}
+              options={{
+                fillColor: "#4880EE",
+                fillOpacity: 1,
+                strokeColor: "#ffffff",
+                strokeOpacity: 1,
+                strokeWeight: 3,
+                clickable: false
+              }}
+            />
+          )}
+        </GoogleMap>
+      )}
 
-        {position && accuracy != null && (
-          <Circle
-            center={position}
-            radius={accuracy}
-            options={{
-              fillColor: "#487fee9b",
-              fillOpacity: 0.2,
-              strokeColor: "#487fee9b",
-              strokeOpacity: 0.4,
-              strokeWeight: 1,
-              clickable: false
-            }}
-          />
-        )}
-        {position && (
-          <Circle
-            center={position}
-            radius={6}
-            options={{
-              fillColor: "#4880EE",
-              fillOpacity: 1,
-              strokeColor: "#ffffff",
-              strokeOpacity: 1,
-              strokeWeight: 3,
-              clickable: false
-            }}
-          />
-        )}
-      </GoogleMap>
-
-      {isLoading && <PositionLoadingOverlay />}
+      {/* {isLoading && <PositionLoadingOverlay />} */}
+      <BottomSheet />
     </>
   );
 }

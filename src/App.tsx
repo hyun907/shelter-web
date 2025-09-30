@@ -1,7 +1,6 @@
 import styles from "./App.module.css";
 import { Map } from "@/features/map";
 import { Modal } from "@/common/components/Modal";
-import { BottomSheet } from "@/common/components/BottomSheet";
 import { Login } from "@/features/user";
 import { SignUp } from "@/features/user";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -21,7 +20,6 @@ function App() {
             <Route path="/detail" element={<ShelterDetail />} />
           </Routes>
           <Modal />
-          <BottomSheet />
         </Router>
       </div>
     </QueryClientProvider>
