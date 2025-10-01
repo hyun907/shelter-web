@@ -13,7 +13,6 @@ export type BottomSheetViewProps = {
   onTouchStart: (e: React.TouchEvent) => void;
   onTouchMove: (e: React.TouchEvent) => void;
   onTouchEnd: () => void;
-  onBackdropClick: () => void;
   ariaLabel?: string;
   children?: React.ReactNode;
 };
@@ -31,13 +30,12 @@ export function BottomSheetView(props: BottomSheetViewProps) {
     onTouchStart,
     onTouchMove,
     onTouchEnd,
-    onBackdropClick,
     ariaLabel,
     children
   } = props;
 
   return (
-    <div className={styles.backdrop} onClick={onBackdropClick}>
+    <div className={styles.backdrop}>
       <div
         ref={sheetRef}
         className={`${styles.sheetWrapper} ${isDragging ? styles.dragging : ""} ${!measured ? styles.noTransition : ""}`}

@@ -13,10 +13,15 @@ export function ShelterBottomSheetContent({
   error?: string | null;
 }) {
   const navigate = useNavigate();
-  const { close } = useBottomSheetStore();
+  useBottomSheetStore();
 
   const handlePress = (shelter: NearbyShelterApiItem) => {
-    close();
+    useBottomSheetStore.setState({
+      content: null,
+      ariaLabel: null,
+      expandToTop: null,
+      collapseToBottom: null
+    });
     const query = encodeURIComponent(JSON.stringify(shelter));
     navigate(`/detail?shelter=${query}`);
   };
