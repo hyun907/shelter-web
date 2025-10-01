@@ -1,4 +1,4 @@
-import { GoogleMap, Circle, Polyline, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, Circle, useLoadScript } from "@react-google-maps/api";
 import { useCurrentPosition } from "../hooks/useCurrentPosition";
 import { useTodayWeather } from "../hooks/useTodayWeather";
 import { useMapBottomSheet } from "../hooks/useMapBottomSheet";
@@ -10,6 +10,9 @@ import { useEffect, useRef } from "react";
 import { BottomSheet } from "@/common/components/BottomSheet";
 import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useRoutePath } from "@/features/route/services/useRoutePath";
+import { RoutePathOverlay } from "@/features/route/components/RoutePathOverlay";
+import { useState } from "react";
+import { useFitRouteBounds } from "../hooks/useFitRouteBounds";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -37,6 +40,9 @@ export default function Map() {
       : { startLat: 0, startLot: 0, goalLat: 0, goalLot: 0 }
   );
   useMapBottomSheet(isLoaded, position, shelters, sheltersError);
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  useFitRouteBounds(map, routeData);
 
   // 위치 에러 발생 시 모달 표시
   useEffect(() => {
@@ -75,18 +81,12 @@ export default function Map() {
           center={position ?? DEFAULT_CENTER}
           zoom={position ? 15 : 12}
           options={{ fullscreenControl: false, streetViewControl: false, mapTypeControl: false }}
+          onLoad={mapInstance => setMap(mapInstance)}
         >
           {routeData?.route?.traoptimal?.[0]?.path?.length &&
             routeData.route.traoptimal[0].path!.length > 0 && (
-              <Polyline
-                path={routeData.route.traoptimal[0].path.map(([lng, lat]: [number, number]) => ({
-                  lat,
-                  lng
-                }))}
-                options={{ strokeColor: "#0f3cc5ff", strokeWeight: 4 }}
-              />
+              <RoutePathOverlay routeData={routeData} />
             )}
-
           {position && (
             <WeatherOverlay
               weather={weather}

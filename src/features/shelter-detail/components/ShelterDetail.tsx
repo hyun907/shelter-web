@@ -59,7 +59,25 @@ export default function ShelterDetail() {
               mapTypeControl: false
             }}
           >
-            <Marker position={{ lat, lng }} />
+            <Marker
+              position={{ lat, lng }}
+              label={{
+                text: "대피소",
+                color: "#fff",
+                fontSize: "11px",
+                fontWeight: "bold"
+              }}
+              icon={{
+                url:
+                  "data:image/svg+xml;utf8," +
+                  encodeURIComponent(`
+                      <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="35" cy="35" r="35" fill="#0844bdff" stroke="white" stroke-width="4"/>
+                      </svg>
+                    `),
+                scaledSize: new window.google.maps.Size(40, 40)
+              }}
+            />
           </GoogleMap>
         </div>
 
