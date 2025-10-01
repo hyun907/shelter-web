@@ -19,12 +19,13 @@ const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 export default function Map() {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
   const { isLoaded } = useLoadScript({ googleMapsApiKey: apiKey ?? "" });
+  const { open, close } = useModalStore();
 
   const { position, accuracy, error: positionError, isLoading, retry } = useCurrentPosition();
-  const { data: weather, loading, error } = useTodayWeather(position);
 
+  const { data: weather, loading, error } = useTodayWeather(position);
   const { data: shelters, error: sheltersError } = useNearbyShelters(position);
-  const { open, close } = useModalStore();
+
   const lastErrorRef = useRef<string | null>(null);
 
   // 목적지 불러오기
@@ -48,11 +49,9 @@ export default function Map() {
   useEffect(() => {
     if (positionError && !isLoading) {
       const errorKey = `${positionError.type}-${positionError.message}`;
-
       // 같은 에러가 아니거나 처음 에러인 경우에만 모달 표시
       if (lastErrorRef.current !== errorKey) {
         lastErrorRef.current = errorKey;
-
         open(
           <PositionErrorModal
             error={positionError}
