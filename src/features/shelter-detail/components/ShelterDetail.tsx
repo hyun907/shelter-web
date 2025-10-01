@@ -9,20 +9,17 @@ import { formatTime } from "../utils/formatTime";
 import { formatDate } from "../utils/formatDate";
 import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useNavigate } from "react-router-dom";
-import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 
 export default function ShelterDetail() {
   const [params] = useSearchParams();
   const shelterParam = params.get("shelter");
   const shelter: NearbyShelterApiItem | null = shelterParam ? JSON.parse(shelterParam) : null;
 
-  const { close } = useBottomSheetStore();
   const { setDestination } = useRouteStore();
   const navigate = useNavigate();
   const onClick = () => {
     if (!isNaN(lat) && !isNaN(lng)) {
       setDestination({ lat, lng });
-      close();
       navigate("/map");
     }
   };

@@ -4,7 +4,6 @@ import { useTodayWeather } from "../hooks/useTodayWeather";
 import { useMapBottomSheet } from "../hooks/useMapBottomSheet";
 import { WeatherOverlay } from ".";
 import { PositionErrorModal } from "./PositionErrorModal";
-import { PositionLoadingOverlay } from "./PositionLoadingOverlay";
 import { useNearbyShelters } from "@/features/shelter";
 import { useModalStore } from "@/common/hooks/useModalStore";
 import { useEffect, useRef } from "react";
@@ -57,7 +56,7 @@ export default function Map() {
             }}
             onClose={close}
           />,
-          "위치 정보 오류"
+          { ariaLabel: "위치 정보 오류" }
         );
       }
     } else if (!positionError) {
