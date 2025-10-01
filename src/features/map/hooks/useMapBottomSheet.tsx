@@ -12,30 +12,33 @@ export function useMapBottomSheet(
   shelters: NearbyShelterApiItem[] | null,
   sheltersError: string | null
 ) {
-  const { open } = useBottomSheetStore();
+  const { setContent } = useBottomSheetStore();
   const openedOnceRef = useRef(false);
 
+  // 초기 진입 시, 지도 로드 여부와 무관하게 한 번 비어있는 리스트를 노출
+  useEffect(() => {
+    if (!openedOnceRef.current && !position) {
+      setContent(<ShelterBottomSheetContent items={[]} />, "대피소 목록");
+      openedOnceRef.current = true;
+    }
+  }, []);
+
+  // 지도 로드 이후 데이터/에러에 따라 내용 업데이트
   useEffect(() => {
     if (!isLoaded) return;
 
-    if (!position && !openedOnceRef.current) {
-      open(<ShelterBottomSheetContent items={[]} />, { ariaLabel: "대피소 목록" });
-      openedOnceRef.current = true;
-      return;
-    }
-
     if (sheltersError) {
-      open(<ShelterBottomSheetContent error={sheltersError} />, { ariaLabel: "대피소 목록" });
+      setContent(<ShelterBottomSheetContent error={sheltersError} />, "대피소 목록");
       openedOnceRef.current = true;
       return;
     }
 
     if (shelters && Array.isArray(shelters)) {
       const items = Array.isArray(shelters) ? shelters : [];
-      open(<ShelterBottomSheetContent items={items} />, { ariaLabel: "대피소 목록" });
+      setContent(<ShelterBottomSheetContent items={items} />, "대피소 목록");
       openedOnceRef.current = true;
     }
-  }, [isLoaded, position, shelters, sheltersError, open]);
+  }, [isLoaded, shelters, sheltersError, setContent]);
 
   return {
     openedOnceRef

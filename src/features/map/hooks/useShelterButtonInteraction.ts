@@ -10,34 +10,26 @@ export function useShelterButtonInteraction(
   shelters: NearbyShelterApiItem[] | null,
   sheltersError: string | null
 ) {
-  const isOpen = useBottomSheetStore(state => state.isOpen);
+  const content = useBottomSheetStore(state => state.content);
   const translateY = useBottomSheetStore(state => state.translateY);
   const expandToTop = useBottomSheetStore(state => state.expandToTop);
   const collapseToBottom = useBottomSheetStore(state => state.collapseToBottom);
-  const openAndExpand = useBottomSheetStore(state => state.openAndExpand);
-  const setTranslateY = useBottomSheetStore(state => state.setTranslateY);
+  const setContent = useBottomSheetStore(state => state.setContent);
 
   const handleShelterClick = () => {
-    if (!isOpen) {
+    if (!content) {
       if (sheltersError) {
-        openAndExpand(createElement(ShelterBottomSheetContent, { error: sheltersError }), {
-          ariaLabel: "대피소 목록"
-        });
+        setContent(
+          createElement(ShelterBottomSheetContent, { error: sheltersError }),
+          "대피소 목록"
+        );
       } else if (shelters && Array.isArray(shelters)) {
         const items = Array.isArray(shelters) ? shelters : [];
-        openAndExpand(createElement(ShelterBottomSheetContent, { items }), {
-          ariaLabel: "대피소 목록"
-        });
+        setContent(createElement(ShelterBottomSheetContent, { items }), "대피소 목록");
       } else {
-        openAndExpand(createElement(ShelterBottomSheetContent, { items: [] }), {
-          ariaLabel: "대피소 목록"
-        });
+        setContent(createElement(ShelterBottomSheetContent, { items: [] }), "대피소 목록");
       }
 
-      // 확실하게 translateY를 0으로 설정
-      setTimeout(() => {
-        setTranslateY(0);
-      }, 50);
       return;
     }
 
