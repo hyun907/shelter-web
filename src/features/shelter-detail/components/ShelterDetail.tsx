@@ -25,9 +25,10 @@ export default function ShelterDetail() {
   const navigate = useNavigate();
 
   const onClick = () => {
-    if (!isNaN(lat) && !isNaN(lng)) {
+    if (!isNaN(lat) && !isNaN(lng) && shelter) {
       setDestination({ lat, lng });
-      navigate("/map");
+      const shelterName = encodeURIComponent(shelter.RSTR_NM);
+      navigate(`/map?shelter=${shelterName}`);
     }
   };
 

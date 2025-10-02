@@ -13,6 +13,8 @@ import { useRoutePath } from "@/features/route/services/useRoutePath";
 import { RoutePathOverlay } from "@/features/route/components/RoutePathOverlay";
 import { useState } from "react";
 import { useFitRouteBounds } from "../hooks/useFitRouteBounds";
+import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
+import { RouteContent } from "@/features/route/components/RouteContent";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -20,6 +22,7 @@ export default function Map() {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
   const { isLoaded } = useLoadScript({ googleMapsApiKey: apiKey ?? "" });
   const { open, close } = useModalStore();
+  const { setContent } = useBottomSheetStore();
 
   const { position, accuracy, error: positionError, isLoading, retry } = useCurrentPosition();
 
@@ -44,6 +47,12 @@ export default function Map() {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   useFitRouteBounds(map, routeData);
+
+  useEffect(() => {
+    if (routeData) {
+      setContent(<RouteContent routeData={routeData} />, "경로 정보");
+    }
+  }, [routeData, setContent]);
 
   // 위치 에러 발생 시 모달 표시
   useEffect(() => {
