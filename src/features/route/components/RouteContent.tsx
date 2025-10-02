@@ -24,7 +24,7 @@ export function RouteContent({ routeData }: RouteBottomSheetContentProps) {
       <div className={styles.summary}>
         <p className={styles.total}>
           총 <span className={styles.highlight}>{formatDurationFromMs(totalDurationCentisec)}</span>{" "}
-          소요 <span>|</span> {totalDistance / 1000}km
+          소요 <span>|</span> {(totalDistance / 1000).toFixed(1)}km
         </p>
         <p className={styles.type}>🚘 차량</p>
       </div>

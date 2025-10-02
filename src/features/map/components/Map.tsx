@@ -8,17 +8,17 @@ import { useNearbyShelters } from "@/features/shelter";
 import { useModalStore } from "@/common/hooks/useModalStore";
 import { useEffect, useRef } from "react";
 import { BottomSheet } from "@/common/components/BottomSheet";
-import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useRoutePath } from "@/features/route/services/useRoutePath";
 import { RoutePathOverlay } from "@/features/route/components/RoutePathOverlay";
 import { useState } from "react";
 import { useFitRouteBounds } from "../hooks/useFitRouteBounds";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { RouteContent } from "@/features/route/components/RouteContent";
-
+import { useSearchParams } from "react-router-dom";
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
 export default function Map() {
+  const [params] = useSearchParams();
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
   const { isLoaded } = useLoadScript({ googleMapsApiKey: apiKey ?? "" });
   const { open, close } = useModalStore();
@@ -32,14 +32,15 @@ export default function Map() {
   const lastErrorRef = useRef<string | null>(null);
 
   // 목적지 불러오기
-  const { destination } = useRouteStore();
+  const destLat = parseFloat(params.get("destLat") ?? "");
+  const destLng = parseFloat(params.get("destLng") ?? "");
   const { data: routeData } = useRoutePath(
-    position && destination
+    position && destLat && destLng
       ? {
           startLat: position.lat,
           startLot: position.lng,
-          goalLat: destination.lat,
-          goalLot: destination.lng
+          goalLat: destLat,
+          goalLot: destLng
         }
       : { startLat: 0, startLot: 0, goalLat: 0, goalLot: 0 }
   );

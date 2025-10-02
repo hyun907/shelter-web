@@ -13,7 +13,6 @@ import Button from "@/common/components/button/Button";
 import styles from "./ShelterDetail.module.css";
 import Header from "@/common/components/header/Header";
 import { formatTime } from "../utils/formatTime";
-import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useNavigate } from "react-router-dom";
 
 export default function ShelterDetail() {
@@ -21,14 +20,12 @@ export default function ShelterDetail() {
   const shelterParam = params.get("shelter");
   const shelter: NearbyShelterApiItem | null = shelterParam ? JSON.parse(shelterParam) : null;
 
-  const { setDestination } = useRouteStore();
   const navigate = useNavigate();
 
   const onClick = () => {
     if (!isNaN(lat) && !isNaN(lng) && shelter) {
-      setDestination({ lat, lng });
       const shelterName = encodeURIComponent(shelter.RSTR_NM);
-      navigate(`/map?shelter=${shelterName}`);
+      navigate(`/map?destLat=${lat}&destLng=${lng}&shelter=${shelterName}`);
     }
   };
 
@@ -123,8 +120,11 @@ export default function ShelterDetail() {
 
           {/* 보유 냉난방기 개수 */}
           <div className={styles.row}>
-            <MdPowerSettingsNew style={{ color: "#0d39ffff", width: "24px", height: "24px" }} />{" "}
-            냉/난방기는 {shelter.COLR_HOLD_ARCNDTN}개 가동 중이에요.
+            😓
+            <MdPowerSettingsNew style={{ color: "#0d39ffff", width: "24px", height: "24px" }} />
+            {shelter.COLR_HOLD_ARCNDTN
+              ? `냉/난방기는 ${shelter.COLR_HOLD_ARCNDTN}개 가동 중이에요.`
+              : "냉/난방기 정보가 없어요.😓"}
           </div>
 
           {/* 면적 */}
