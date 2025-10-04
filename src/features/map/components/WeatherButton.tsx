@@ -4,6 +4,7 @@ import { WeatherIcon } from "./WeatherIcon";
 import { useShelterButtonInteraction } from "../hooks/useShelterButtonInteraction";
 import type { TodayWeatherResponse } from "../schemas/weather.schema";
 import type { NearbyShelterApiItem } from "@/features/shelter/schemas/shelter.schema";
+import { useNavigate } from "react-router-dom";
 
 export type WeatherButtonProps = {
   label: string;
@@ -28,6 +29,7 @@ export function WeatherButton({
     shelters ?? null,
     sheltersError ?? null
   );
+  const navigate = useNavigate();
 
   return (
     <div className={`${styles.button} ${seasonClass}`}>
@@ -47,18 +49,17 @@ export function WeatherButton({
         onClick={e => {
           e.preventDefault();
           e.stopPropagation();
+          navigate("/map", { state: { openShelterSheet: true }, replace: true });
           handleShelterClick();
         }}
         onTouchEnd={e => {
           e.preventDefault();
           e.stopPropagation();
+          navigate("/map", { state: { openShelterSheet: true }, replace: true });
           handleShelterClick();
         }}
         disabled={false}
-        style={{
-          minHeight: "44px",
-          minWidth: "120px"
-        }}
+        style={{ minHeight: "44px", minWidth: "120px" }}
       >
         주변 쉼터 보기
       </button>

@@ -11,25 +11,29 @@ export function useShelterButtonInteraction(
   sheltersError: string | null
 ) {
   const content = useBottomSheetStore(state => state.content);
+  const ariaLabel = useBottomSheetStore(state => state.ariaLabel);
   const translateY = useBottomSheetStore(state => state.translateY);
   const expandToTop = useBottomSheetStore(state => state.expandToTop);
   const collapseToBottom = useBottomSheetStore(state => state.collapseToBottom);
   const setContent = useBottomSheetStore(state => state.setContent);
 
   const handleShelterClick = () => {
-    if (!content) {
+    const isShowingShelterList = ariaLabel === "대피소 목록";
+
+    // 내용이 없거나 다른 내용이면 대피소 목록으로 변경
+    if (!content || !isShowingShelterList) {
       if (sheltersError) {
         setContent(
           createElement(ShelterBottomSheetContent, { error: sheltersError }),
           "대피소 목록"
         );
-      } else if (shelters && Array.isArray(shelters)) {
-        const items = Array.isArray(shelters) ? shelters : [];
-        setContent(createElement(ShelterBottomSheetContent, { items }), "대피소 목록");
       } else {
-        setContent(createElement(ShelterBottomSheetContent, { items: [] }), "대피소 목록");
+        setContent(
+          createElement(ShelterBottomSheetContent, { items: shelters ?? [] }),
+          "대피소 목록"
+        );
       }
-
+      expandToTop?.();
       return;
     }
 

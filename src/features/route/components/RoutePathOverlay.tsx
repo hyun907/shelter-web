@@ -12,7 +12,6 @@ type RoutePathOverlayProps = {
 
 export function RoutePathOverlay({ routeData }: RoutePathOverlayProps) {
   const path = routeData?.route?.traoptimal?.[0]?.path;
-
   if (!path || path.length === 0) return null;
 
   return (
@@ -23,12 +22,7 @@ export function RoutePathOverlay({ routeData }: RoutePathOverlayProps) {
       />
       <Marker
         position={{ lat: path[0][1], lng: path[0][0] }}
-        label={{
-          text: "출발",
-          color: "#fff",
-          fontSize: "11px",
-          fontWeight: "bold"
-        }}
+        label={{ text: "출발", color: "#fff", fontSize: "11px", fontWeight: "bold" }}
         icon={{
           url:
             "data:image/svg+xml;utf8," +
@@ -42,12 +36,7 @@ export function RoutePathOverlay({ routeData }: RoutePathOverlayProps) {
       />
       <Marker
         position={{ lat: path[path.length - 1][1], lng: path[path.length - 1][0] }}
-        label={{
-          text: "도착",
-          color: "#fff",
-          fontSize: "11px",
-          fontWeight: "bold"
-        }}
+        label={{ text: "도착", color: "#fff", fontSize: "11px", fontWeight: "bold" }}
         icon={{
           url:
             "data:image/svg+xml;utf8," +

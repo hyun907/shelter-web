@@ -120,7 +120,6 @@ export default function ShelterDetail() {
 
           {/* 보유 냉난방기 개수 */}
           <div className={styles.row}>
-            😓
             <MdPowerSettingsNew style={{ color: "#0d39ffff", width: "24px", height: "24px" }} />
             {shelter.COLR_HOLD_ARCNDTN
               ? `냉/난방기는 ${shelter.COLR_HOLD_ARCNDTN}개 가동 중이에요.`
