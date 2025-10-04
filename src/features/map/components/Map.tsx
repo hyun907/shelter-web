@@ -14,6 +14,7 @@ import { useFitRouteBounds } from "../hooks/useFitRouteBounds";
 import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { RouteContent } from "@/features/route/components/RouteContent";
 import { useSearchParams } from "react-router-dom";
+import { RouteButton } from "@/features/route/components/RouteButton";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -106,6 +107,7 @@ export default function Map() {
           {shouldShowRoute && routeData?.route?.traoptimal?.[0]?.path && (
             <RoutePathOverlay key={`route-${destLat}-${destLng}`} routeData={routeData} />
           )}
+          {shouldShowRoute && <RouteButton routeData={routeData ?? null} />}
 
           {position && (
             <WeatherOverlay
@@ -131,6 +133,7 @@ export default function Map() {
               }}
             />
           )}
+
           {position && (
             <Circle
               center={position}
