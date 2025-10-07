@@ -1,13 +1,18 @@
 import { useSearchParams } from "react-router-dom";
 import type { NearbyShelterApiItem } from "@/features/shelter/schemas/shelter.schema";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
-import { MdPeople, MdSchedule, MdApartment, MdInfo } from "react-icons/md";
+import {
+  MdPeople,
+  MdSchedule,
+  MdApartment,
+  MdHotel,
+  MdPowerSettingsNew,
+  MdConfirmationNumber
+} from "react-icons/md";
 import Button from "@/common/components/button/Button";
 import styles from "./ShelterDetail.module.css";
 import Header from "@/common/components/header/Header";
 import { formatTime } from "../utils/formatTime";
-import { formatDate } from "../utils/formatDate";
-import { useRouteStore } from "@/features/route/hooks/useRouteStore";
 import { useNavigate } from "react-router-dom";
 
 export default function ShelterDetail() {
@@ -15,12 +20,12 @@ export default function ShelterDetail() {
   const shelterParam = params.get("shelter");
   const shelter: NearbyShelterApiItem | null = shelterParam ? JSON.parse(shelterParam) : null;
 
-  const { setDestination } = useRouteStore();
   const navigate = useNavigate();
+
   const onClick = () => {
-    if (!isNaN(lat) && !isNaN(lng)) {
-      setDestination({ lat, lng });
-      navigate("/map");
+    if (!isNaN(lat) && !isNaN(lng) && shelter) {
+      const shelterName = encodeURIComponent(shelter.RSTR_NM);
+      navigate(`/map?destLat=${lat}&destLng=${lng}&shelter=${shelterName}`);
     }
   };
 
@@ -37,25 +42,40 @@ export default function ShelterDetail() {
     return <div>유효하지 않은 좌표 정보입니다.</div>;
   }
 
-  // 보조 정보: 비고나 시설분류
-  const auxiliaryInfo = shelter.RM || shelter.FCLTY_SCLAS || "정보 없음";
-
   return (
     <div className={styles.container}>
       <Header title="" />
-      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+      <div className={styles.body}>
         <div className={styles.mapContainer}>
           <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "200px" }}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
             center={{ lat, lng }}
-            zoom={15}
+            zoom={17}
             options={{
               fullscreenControl: false,
               streetViewControl: false,
               mapTypeControl: false
             }}
           >
-            <Marker position={{ lat, lng }} />
+            <Marker
+              position={{ lat, lng }}
+              label={{
+                text: "대피소",
+                color: "#fff",
+                fontSize: "11px",
+                fontWeight: "bold"
+              }}
+              icon={{
+                url:
+                  "data:image/svg+xml;utf8," +
+                  encodeURIComponent(`
+                      <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="35" cy="35" r="35" fill="#0844bdff" stroke="white" stroke-width="4"/>
+                      </svg>
+                    `),
+                scaledSize: new window.google.maps.Size(40, 40)
+              }}
+            />
           </GoogleMap>
         </div>
 
@@ -68,47 +88,54 @@ export default function ShelterDetail() {
 
           {/* 수용 인원 */}
           <div className={styles.row}>
-            <MdPeople style={{ color: "#0c47bcff", width: "24px", height: "24px" }} /> 최대{" "}
-            {shelter.USE_PSBL_NMPR || "정보 없음"}명
+            <MdPeople style={{ color: "#000000ff", width: "24px", height: "24px" }} /> 최대{" "}
+            {shelter.USE_PSBL_NMPR
+              ? `${shelter.USE_PSBL_NMPR}명까지 수용 가능해요.`
+              : "수용 가능 인원 정보가 없어요.🧐"}
           </div>
 
           {/* 운영 시간 */}
           <div className={styles.row}>
-            <MdSchedule style={{ color: "#f0350bff", width: "24px", height: "24px" }} /> 평일 운영:{" "}
+            <MdSchedule style={{ color: "#da7c66ff", width: "24px", height: "24px" }} /> 평일 운영
+            시간은{" "}
             {shelter.WKDAY_OPER_BEGIN_TIME && shelter.WKDAY_OPER_END_TIME
-              ? `${formatTime(shelter.WKDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKDAY_OPER_END_TIME)}`
-              : "정보 없음"}
+              ? `${formatTime(shelter.WKDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKDAY_OPER_END_TIME)}예요.`
+              : "정보가 없어요😅"}
           </div>
 
           <div className={styles.row}>
-            <MdSchedule style={{ color: "#f5d32bff", width: "24px", height: "24px" }} /> 주말 운영:{" "}
+            <MdSchedule style={{ color: "#dabd2bff", width: "24px", height: "24px" }} /> 주말 운영
+            시간은{" "}
             {shelter.WKEND_HDAY_OPER_BEGIN_TIME && shelter.WKEND_HDAY_OPER_END_TIME
-              ? `${formatTime(shelter.WKEND_HDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKEND_HDAY_OPER_END_TIME)}`
-              : "정보 없음"}
+              ? `${formatTime(shelter.WKEND_HDAY_OPER_BEGIN_TIME)} ~ ${formatTime(shelter.WKEND_HDAY_OPER_END_TIME)}예요.`
+              : "아직 정보가 없어요.😅"}
+          </div>
+
+          {/* 숙박 가능 여부 */}
+          <div className={styles.row}>
+            <MdHotel style={{ color: "#6b6968ff", width: "24px", height: "24px" }} />
+            숙박
+            {shelter.CHCK_MATTER_STAYNG_PSBL_AT === "N" ? "은 불가능해요.😢" : " 가능해요!"}
+          </div>
+
+          {/* 보유 냉난방기 개수 */}
+          <div className={styles.row}>
+            <MdPowerSettingsNew style={{ color: "#0d39ffff", width: "24px", height: "24px" }} />
+            {shelter.COLR_HOLD_ARCNDTN
+              ? `냉/난방기는 ${shelter.COLR_HOLD_ARCNDTN}개 가동 중이에요.`
+              : "냉/난방기 정보가 없어요.😓"}
           </div>
 
           {/* 면적 */}
           <div className={styles.row}>
-            <MdApartment style={{ color: "#4b7278ff", width: "24px", height: "24px" }} /> 면적:{" "}
-            {shelter.AR || "정보 없음"}㎡
-          </div>
-
-          {/* 추가 정보 */}
-          <div className={styles.row}>
-            <MdInfo style={{ color: "#ffa500ff", width: "24px", height: "24px" }} />
-            추가 정보: {auxiliaryInfo}
+            <MdApartment style={{ color: "#4b7278ff", width: "24px", height: "24px" }} /> 건물
+            면적은 {shelter.AR ? `${shelter.AR}㎡ 이에요.` : "아직 정보가 없어요.😅"}
           </div>
 
           {/* 대피소 번호 */}
           <div className={styles.row}>
-            <MdInfo style={{ color: "#6a0dadff", width: "24px", height: "24px" }} /> 시설 고유 번호:{" "}
-            {shelter.RSTR_FCLTY_NO}
-          </div>
-
-          {/* 마지막 수정 시간 */}
-          <div className={styles.row}>
-            <MdInfo style={{ color: "#228b22ff", width: "24px", height: "24px" }} />
-            마지막 업데이트: {formatDate(shelter.MODF_TIME)}
+            <MdConfirmationNumber style={{ color: "#6a0dadff", width: "24px", height: "24px" }} />{" "}
+            대피소 번호는 {shelter.RSTR_FCLTY_NO} 이에요.
           </div>
         </div>
       </div>
