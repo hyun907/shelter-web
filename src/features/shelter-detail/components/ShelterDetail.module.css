@@ -1,72 +1,60 @@
 .container {
   display: flex;
-
   flex-direction: column;
-  background-color: #fff;
-  height: 100%;
-  padding: 16px;
-  justify-content: flex-start;
+  width: 90vw;
+  height: 100vh;
+  margin: 0 auto;
 }
 
 .mapContainer {
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
+  width: 100vw;
+  height: 32vh;
   overflow: hidden;
+  margin-left: calc(50% - 50vw);
 }
 
 .detailSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 16px auto;
-}
-
-.row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  color: #000;
-  text-align: left;
-  font-weight: 600;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-  color: #000;
-  text-align: center;
-}
-
-.address {
-  font-size: 14px;
-  color: #666;
-  text-align: center;
-  padding: 0px;
+  align-content: space-between;
+  gap: 2vh;
+  margin-left: 16px;
+  margin-right: 16px;
 }
 
 .row {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: clamp(16px, 2.1vh, 20px);
   color: #000;
   text-align: center;
   font-weight: 600;
+}
+
+.title {
+  font-size: clamp(16px, 2.8vh, 32px);
+  font-weight: 700;
+  color: #000;
+  text-align: center;
+  margin: 2vh;
+}
+
+.address {
+  font-size: clamp(14px, 2vh, 18px);
+  color: #666;
+  text-align: center;
+  margin: 0px;
 }
 
 .routeButton {
   position: absolute;
   bottom: 20px;
   width: 90vw;
-  background-color: #4a7dff;
   color: #fff;
   border-radius: 8px;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
   border: none;
-  padding: 12px 0;
 }

@@ -57,7 +57,7 @@ export function toPtyKorean(pty: string) {
  */
 export function getCurrentSeason(): "summer" | "winter" {
   const currentMonth = new Date().getMonth() + 1;
-  return currentMonth >= 4 && currentMonth <= 9 ? "summer" : "winter";
+  return currentMonth >= 4 && currentMonth <= 10 ? "summer" : "winter";
 }
 
 /**
