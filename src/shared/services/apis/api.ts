@@ -9,18 +9,11 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  async response => {
-    const isGet = response.config.method === "get";
-    const isJson = response.headers["content-type"]?.includes("application/json");
-
-    if (isGet && isJson) {
-      response.data = await response.data;
-    }
-
-    return response;
+  response => {
+    return response.data;
   },
-  async error => {
-    console.error("API 요청 에러:", error);
+  error => {
+    console.error("API Error:", error.response || error.message);
     return Promise.reject(error);
   }
 );
