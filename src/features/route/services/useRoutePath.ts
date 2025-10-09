@@ -32,11 +32,14 @@ export function useRoutePath(params: RoutePathParams) {
         apiBase = import.meta.env.VITE_PROXY_TARGET;
       }
 
-      const urlStr = buildApiUrl(apiBase, `/route/path?${query.toString()}`);
+      const urlStr = buildApiUrl(apiBase, `/api/route/path?${query.toString()}`);
 
       const res = await axios.get(urlStr, {
         withCredentials: true
       });
+      // 배포 환경에서 URL 확인을 위한 로깅
+      console.log("로컬 경로 API 요청 URL:", urlStr);
+      console.log("배포경로 VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
 
       return res.data as RoutePathResponse;
     },
