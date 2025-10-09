@@ -14,7 +14,7 @@ export function useRoutePath(params: RoutePathParams) {
         goalLot: goalLot.toString()
       });
 
-      const response = await axios.get(`/route/path?${query.toString()}`);
+      const response = await axios.get(`/api/route/path?${query.toString()}`);
 
       return response.data as RoutePathResponse;
     },
