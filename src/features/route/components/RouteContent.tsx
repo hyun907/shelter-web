@@ -14,7 +14,6 @@ export function RouteContent({ routeData }: RouteBottomSheetContentProps) {
   if (!routeData) return <div style={{ backgroundColor: "red" }}>경로 정보가 없습니다.</div>;
 
   const route: RouteGuide[] = routeData.route?.traoptimal?.[0]?.guide ?? [];
-  console.log(route);
   const shelterParam = params.get("shelter");
 
   const { totalDistance, totalDurationCentisec } = calculateRoute(route);
