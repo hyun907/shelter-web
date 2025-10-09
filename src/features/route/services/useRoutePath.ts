@@ -35,7 +35,7 @@ export function useRoutePath(params: RoutePathParams) {
         apiBase = import.meta.env.VITE_PROXY_TARGET;
       }
 
-      const urlStr = buildApiUrl(apiBase, `/api/route/path?${queryString}`);
+      const urlStr = buildApiUrl(apiBase, `/route/path?${queryString}`);
 
       console.log("배포 환경 API 요청 URL:", urlStr);
       console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
