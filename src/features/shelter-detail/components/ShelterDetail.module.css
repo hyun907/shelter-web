@@ -11,15 +11,15 @@
   display: flex;
   flex-direction: column;
   gap: 2vh;
-  padding-bottom: 50px;
+  padding-bottom: 80px;
   overflow-y: auto;
 }
 
 .mapContainer {
-  width: 100vw;
+  width: 100%;
   height: 26vh;
   overflow: hidden;
-  margin-left: calc(50% - 50vw);
+  margin-left: 0;
 }
 
 .detailSection {
@@ -40,7 +40,7 @@
 }
 
 .title {
-  font-size: clamp(16px, 2.8vh, 32px);
+  font-size: clamp(18px, 3.2vh, 32px);
   font-weight: 700;
   color: #000;
   text-align: center;
@@ -55,7 +55,7 @@
 }
 
 .routeButton {
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -66,4 +66,5 @@
   font-size: 16px;
   cursor: pointer;
   border: none;
+  z-index: 1000;
 }
