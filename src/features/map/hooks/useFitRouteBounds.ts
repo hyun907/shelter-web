@@ -21,6 +21,6 @@ export function useFitRouteBounds(map: google.maps.Map | null, routeData?: Route
       bounds.extend({ lat, lng });
     });
 
-    map.fitBounds(bounds, { top: 80, right: 80, bottom: 80, left: 80 });
+    map.fitBounds(bounds, { top: 16, right: 16, bottom: 12, left: 12 });
   }, [map, routeData]);
 }

@@ -4,11 +4,20 @@
   width: 90vw;
   height: 100vh;
   margin: 0 auto;
+  position: relative;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  padding-bottom: 50px;
+  overflow-y: auto;
 }
 
 .mapContainer {
   width: 100vw;
-  height: 32vh;
+  height: 26vh;
   overflow: hidden;
   margin-left: calc(50% - 50vw);
 }
@@ -16,7 +25,6 @@
 .detailSection {
   display: flex;
   flex-direction: column;
-  align-content: space-between;
   gap: 2vh;
   margin-left: 16px;
   margin-right: 16px;
@@ -28,7 +36,6 @@
   gap: 8px;
   font-size: clamp(16px, 2.1vh, 20px);
   color: #000;
-  text-align: center;
   font-weight: 600;
 }
 
@@ -37,7 +44,7 @@
   font-weight: 700;
   color: #000;
   text-align: center;
-  margin: 2vh;
+  margin: 2vh 0;
 }
 
 .address {
@@ -50,6 +57,8 @@
 .routeButton {
   position: absolute;
   bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 90vw;
   color: #fff;
   border-radius: 8px;
