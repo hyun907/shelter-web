@@ -69,11 +69,11 @@ export default function ShelterDetail() {
                 url:
                   "data:image/svg+xml;utf8," +
                   encodeURIComponent(`
-                      <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="35" cy="35" r="35" fill="#0844bdff" stroke="white" stroke-width="4"/>
+                      <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="30" fill="#0844bdff" stroke="white" stroke-width="4"/>
                       </svg>
                     `),
-                scaledSize: new window.google.maps.Size(40, 40)
+                scaledSize: new window.google.maps.Size(35, 35)
               }}
             />
           </GoogleMap>
