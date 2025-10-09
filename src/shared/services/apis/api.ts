@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_MEMBER_API_URL}`,
+  baseURL: `${import.meta.env.VITE_MEMBER_API_URL}members`,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json"
@@ -9,18 +9,12 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  async response => {
-    const isGet = response.config.method === "get";
-    const isJson = response.headers["content-type"]?.includes("application/json");
-
-    if (isGet && isJson) {
-      response.data = await response.data;
-    }
-
-    return response;
+  response => {
+    console.log("API Response 임시테스트 콘솔:", response);
+    return response.data;
   },
-  async error => {
-    console.error("API 요청 에러:", error);
+  error => {
+    console.error("API Error:", error.response || error.message);
     return Promise.reject(error);
   }
 );
