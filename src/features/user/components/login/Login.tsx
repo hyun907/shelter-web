@@ -25,7 +25,6 @@ export default function Login() {
     <div className={styles.loginWrapper}>
       <div className={styles.logoArea}>
         <img src={LogoIcon} alt="Logo" className={styles.logoImg} />
-        <span className={styles.logoText}>LOGO</span>
       </div>
 
       <div className={styles.inputArea}>
