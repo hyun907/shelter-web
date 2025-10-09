@@ -15,22 +15,30 @@ export function useRoutePath(params: RoutePathParams) {
         goalLot: goalLot.toString()
       });
 
-      let url = "";
-
+      // 개발 환경: Vite 프록시 사용
       if (import.meta.env.DEV) {
-        // 개발 환경: Vite 프록시 사용
-        url = `/route/path?${query.toString()}`;
-      } else {
-        // 배포 환경: 절대 경로 + 환경 변수
-        const apiBase = import.meta.env.VITE_API_BASE_URL;
-        url = buildApiUrl(apiBase, `/route/path?${query.toString()}`);
+        const res = await axios.get(`/route/path?${query.toString()}`, {
+          withCredentials: true
+        });
+        return res.data as RoutePathResponse;
       }
 
-      const response = await axios.get(url, {
+      // 배포 환경: 절대 경로 + 환경 변수 사용
+      let apiBase: string | undefined;
+
+      if (import.meta.env.VITE_API_BASE_URL) {
+        apiBase = import.meta.env.VITE_API_BASE_URL;
+      } else if (import.meta.env.VITE_PROXY_TARGET) {
+        apiBase = import.meta.env.VITE_PROXY_TARGET;
+      }
+
+      const urlStr = buildApiUrl(apiBase, `/route/path?${query.toString()}`);
+
+      const res = await axios.get(urlStr, {
         withCredentials: true
       });
 
-      return response.data as RoutePathResponse;
+      return res.data as RoutePathResponse;
     },
     enabled: !!params.startLat && !!params.startLot && !!params.goalLat && !!params.goalLot
   });
