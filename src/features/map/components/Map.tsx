@@ -122,7 +122,7 @@ export default function Map() {
           {position && accuracy != null && (
             <Circle
               center={position}
-              radius={accuracy}
+              radius={Math.max(accuracy ?? 0, 100)}
               options={{
                 fillColor: "#487fee9b",
                 fillOpacity: 0.2,
@@ -137,13 +137,13 @@ export default function Map() {
           {position && (
             <Circle
               center={position}
-              radius={6}
+              radius={10}
               options={{
                 fillColor: "#4880EE",
                 fillOpacity: 1,
                 strokeColor: "#ffffff",
                 strokeOpacity: 1,
-                strokeWeight: 3,
+                strokeWeight: 1,
                 clickable: false
               }}
             />
