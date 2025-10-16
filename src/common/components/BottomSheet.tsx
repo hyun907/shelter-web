@@ -45,9 +45,7 @@ export function BottomSheet() {
     }
   }, [content, interaction.translateY]);
 
-  if (!content) return null;
-
-  const root = document.getElementById("modal-root") ?? document.body;
+  const root = document.getElementById("bottom-sheet-root") ?? document.body;
 
   return createPortal(
     <BottomSheetView
@@ -60,9 +58,7 @@ export function BottomSheet() {
       onPointerDown={interaction.onPointerDown}
       onPointerMove={interaction.onPointerMove}
       onPointerUp={interaction.onPointerUp}
-      onTouchStart={interaction.onTouchStart}
-      onTouchMove={interaction.onTouchMove}
-      onTouchEnd={interaction.onTouchEnd}
+      onPointerCancel={interaction.onPointerCancel}
       ariaLabel={ariaLabel ?? undefined}
     >
       {content}

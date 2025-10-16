@@ -10,9 +10,7 @@ export type BottomSheetInteraction = {
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerMove: (e: React.PointerEvent) => void;
   onPointerUp: () => void;
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchMove: (e: React.TouchEvent) => void;
-  onTouchEnd: () => void;
+  onPointerCancel: () => void;
   expandToTop: () => void;
   collapseToBottom: () => void;
 };
@@ -39,12 +37,10 @@ export function useBottomSheetInteraction(peekHeight: number) {
     const el = sheetRef.current;
     if (!el) return;
 
-    // ResizeObserver나 getBoundingClientRect를 사용하여 정확한 높이 측정
     const rect = el.getBoundingClientRect();
     const h = rect.height;
 
     if (h === 0) {
-      // 아직 높이가 측정되지 않았다면 다음 프레임에서 재시도
       requestAnimationFrame(() => recalc());
       return;
     }
@@ -143,7 +139,7 @@ export function useBottomSheetInteraction(peekHeight: number) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [recalc, measured]);
+  }, [recalc, measured, peekHeight]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (!measured || e.button !== 0) return;
@@ -180,38 +176,12 @@ export function useBottomSheetInteraction(peekHeight: number) {
     animateToPosition(snapTo);
   };
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (!measured || e.touches.length === 0) return;
-
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-      setIsAnimating(false);
-    }
-
-    setIsDragging(true);
-    const touch = e.touches[0];
-    startYRef.current = touch.clientY;
-    startTranslateRef.current = translateY;
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !measured || e.touches.length === 0) return;
-    const touch = e.touches[0];
-    const dy = touch.clientY - startYRef.current;
-    const next = Math.min(
-      Math.max(startTranslateRef.current + dy * 0.95, 0),
-      maxTranslateRef.current
-    );
-    setTranslateY(next);
-  };
-
-  const onTouchEnd = () => {
+  const onPointerCancel = () => {
     if (!isDragging || !measured) return;
     setIsDragging(false);
-    const over = maxTranslateRef.current;
-    const snapTo = translateY < over * 0.4 ? 0 : over;
 
+    const over = maxTranslateRef.current;
+    const snapTo = translateYRef.current < over * 0.4 ? 0 : over;
     animateToPosition(snapTo);
   };
 
@@ -269,9 +239,7 @@ export function useBottomSheetInteraction(peekHeight: number) {
     onPointerDown,
     onPointerMove,
     onPointerUp,
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
+    onPointerCancel,
     expandToTop,
     collapseToBottom
   } as BottomSheetInteraction;
