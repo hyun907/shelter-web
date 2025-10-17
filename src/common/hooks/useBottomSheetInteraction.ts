@@ -194,7 +194,7 @@ export function useBottomSheetInteraction(peekHeight: number) {
       setIsAnimating(true);
 
       const startY = translateY;
-      const duration = 400;
+      const duration = 100;
       const startTime = performance.now();
 
       const animate = (currentTime: number) => {
