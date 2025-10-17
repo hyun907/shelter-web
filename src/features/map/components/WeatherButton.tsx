@@ -59,7 +59,6 @@ export function WeatherButton({
           handleShelterClick();
         }}
         disabled={false}
-        style={{ minHeight: "44px", minWidth: "120px" }}
       >
         주변 쉼터 보기
       </button>

@@ -15,6 +15,7 @@ import { useBottomSheetStore } from "@/common/hooks/useBottomSheetStore";
 import { RouteContent } from "@/features/route/components/RouteContent";
 import { useSearchParams } from "react-router-dom";
 import { RouteButton } from "@/features/route/components/RouteButton";
+import { useCurrentLocationNavigation } from "../hooks/useCurrentLocationNavigation";
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 }; // 서울 시청
 
@@ -53,6 +54,8 @@ export default function Map() {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [shouldShowRoute, setShouldShowRoute] = useState(false);
+
+  const { navigateToCurrentLocation } = useCurrentLocationNavigation(map, position);
 
   // 경로가 있을 때만 bounds 맞추기
   useFitRouteBounds(map, hasDestination ? routeData : undefined);
@@ -116,6 +119,7 @@ export default function Map() {
               error={error}
               shelters={shelters}
               sheltersError={sheltersError}
+              onCurrentLocationClick={navigateToCurrentLocation}
             />
           )}
 

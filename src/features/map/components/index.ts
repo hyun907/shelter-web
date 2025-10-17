@@ -4,3 +4,4 @@ export { WeatherModalContent } from "./WeatherModalContent";
 export { WeatherIcon } from "./WeatherIcon";
 export { PositionErrorModal } from "./PositionErrorModal";
 export { PositionLoadingOverlay } from "./PositionLoadingOverlay";
+export { CurrentLocationButton } from "./CurrentLocationButton";

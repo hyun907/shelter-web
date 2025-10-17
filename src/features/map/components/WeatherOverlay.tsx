@@ -6,6 +6,7 @@ import { useModalStore } from "@/common/hooks/useModalStore";
 import { WeatherModalContent } from ".";
 import { WeatherButton } from ".";
 import { useWeatherButtonLabel } from "../hooks/useWeatherButtonLabel";
+import { CurrentLocationButton } from "./CurrentLocationButton";
 
 type Props = {
   weather: TodayWeatherResponse | null;
@@ -13,9 +14,17 @@ type Props = {
   error?: string | null;
   shelters?: NearbyShelterApiItem[] | null;
   sheltersError?: string | null;
+  onCurrentLocationClick?: () => void;
 };
 
-function WeatherOverlayComponent({ weather, loading, error, shelters, sheltersError }: Props) {
+function WeatherOverlayComponent({
+  weather,
+  loading,
+  error,
+  shelters,
+  sheltersError,
+  onCurrentLocationClick
+}: Props) {
   const open = useModalStore(state => state.open);
 
   const buttonText = useWeatherButtonLabel(weather, loading, error);
@@ -36,6 +45,9 @@ function WeatherOverlayComponent({ weather, loading, error, shelters, sheltersEr
         shelters={shelters}
         sheltersError={sheltersError}
       />
+      {onCurrentLocationClick && (
+        <CurrentLocationButton onClick={onCurrentLocationClick} disabled={loading || !!error} />
+      )}
     </div>
   );
 }
