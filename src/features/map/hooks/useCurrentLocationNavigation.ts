@@ -1,9 +1,8 @@
 import { useCallback } from "react";
-import type { Position } from "../types/position";
 
 export function useCurrentLocationNavigation(
   map: google.maps.Map | null,
-  position: Position | null
+  position: google.maps.LatLngLiteral | null
 ) {
   const navigateToCurrentLocation = useCallback(() => {
     if (!map || !position) {
