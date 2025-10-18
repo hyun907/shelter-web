@@ -21,7 +21,7 @@ export const getErrorIcon = (errorType: PositionError["type"]): string => {
 export const getActionText = (errorType: PositionError["type"]): string => {
   switch (errorType) {
     case "permission_denied":
-      return "설정에서 권한 허용";
+      return "허용하는 방법";
     case "timeout":
       return "다시 시도";
     default:

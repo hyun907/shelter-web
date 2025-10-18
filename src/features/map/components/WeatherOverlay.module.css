@@ -12,19 +12,19 @@
 .button {
   background-color: #fff;
   color: #000000;
-  border-radius: 10px;
-  font-size: 1.6rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.1;
   user-select: none;
   -webkit-backdrop-filter: saturate(180%) blur(6px);
   backdrop-filter: saturate(180%) blur(6px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.222);
-  gap: 0.5em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  gap: 0.4em;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0.5em;
+  padding: 6px 0.6em;
   box-sizing: border-box;
 }
 
@@ -53,15 +53,16 @@
 .shelterButton {
   background-color: transparent;
   border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 1.2rem;
-  font-weight: 700;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: "Pretendard", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
   min-width: fit-content;
-  min-height: 44px;
+  min-height: 32px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   pointer-events: auto;
@@ -217,19 +218,18 @@
   font-size: clamp(15px, 2.2vw, 18px);
 }
 
-/* Mobile responsive styles */
 @media (max-width: 480px) {
   .button {
-    min-width: 260px;
-    padding: 8px 12px;
-    font-size: 1.4rem;
+    min-width: 180px;
+    padding: 5px 8px;
+    font-size: 1rem;
   }
 
   .shelterButton {
-    padding: 8px 12px;
-    font-size: 1.1rem;
-    min-height: 48px;
-    min-width: 120px;
+    padding: 3px 6px;
+    font-size: 0.8rem;
+    min-height: 30px;
+    min-width: 80px;
   }
 
   .container {
@@ -240,15 +240,15 @@
 
 @media (max-width: 360px) {
   .button {
-    min-width: 240px;
-    padding: 6px 10px;
-    font-size: 1.2rem;
+    min-width: 170px;
+    padding: 4px 6px;
+    font-size: 0.9rem;
   }
 
   .shelterButton {
-    padding: 8px 10px;
-    font-size: 1rem;
-    min-height: 44px;
-    min-width: 110px;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+    min-height: 28px;
+    min-width: 70px;
   }
 }

@@ -10,9 +10,7 @@ export type BottomSheetViewProps = {
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerMove: (e: React.PointerEvent) => void;
   onPointerUp: () => void;
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchMove: (e: React.TouchEvent) => void;
-  onTouchEnd: () => void;
+  onPointerCancel: () => void;
   ariaLabel?: string;
   children?: React.ReactNode;
 };
@@ -27,9 +25,7 @@ export function BottomSheetView(props: BottomSheetViewProps) {
     onPointerDown,
     onPointerMove,
     onPointerUp,
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
+    onPointerCancel,
     ariaLabel,
     children
   } = props;
@@ -51,11 +47,7 @@ export function BottomSheetView(props: BottomSheetViewProps) {
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onTouchCancel={onTouchEnd}
+          onPointerCancel={onPointerCancel}
         />
         <div className={styles.peekSpacer} />
         <div className={styles.content}>{children}</div>
